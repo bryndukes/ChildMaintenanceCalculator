@@ -8,6 +8,8 @@ namespace ChildMaintenanceCalculator.Models
 
     public class ReceivingParent
     {
+        public int Id { get; set; }
+
         public string FirstName { get; set; }
 
         public List<Child> Children { get; set; }

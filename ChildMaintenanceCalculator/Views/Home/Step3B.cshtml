@@ -1,0 +1,16 @@
+﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+
+@model Step3BViewModel;
+
+<form id="step3B" asp-controller="Home" asp-action="Step3B" method="post">
+
+<label>How many nights per year does each child stay with the paying parent?</label>
+
+    @{
+        foreach (Step3BChild child in Model.Step3BChildren)
+        {
+            <label>@child.</label>
+        }
+    }
+
+</form>

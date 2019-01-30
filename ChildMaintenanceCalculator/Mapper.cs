@@ -23,6 +23,8 @@ namespace ChildMaintenanceCalculator
             }
         }
 
+        //USAGE: Mapper.Copy<CalculatorWrapper,AddReceivingParentsAndChildrenViewModel > (calculatorWrapper, vm);
+
         //Add the below line, and the PropertyCopyIgnoreAttribute if there are properties you don't want to copy
         //!x.CustomAttributes.Any(y => y.AttributeType.Name == PropertyCopyIgnoreAttribute.Name)
 

@@ -1,0 +1,16 @@
+﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+
+@model Step2ViewModel;
+
+<form id="step2" asp-controller="Home" asp-action="Step2" method="post">
+
+    <label>Does the paying parent receive a relevant benefit?</label>
+    <br />
+    <p>
+        *List of benefits will go here*
+    </p>
+    <input asp-for="@Model.PayingParentReceivesBenefit" />
+
+    <button type="submit">Next</button>
+
+</form>

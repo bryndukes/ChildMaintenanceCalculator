@@ -1,0 +1,16 @@
+﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+
+@model Step3AViewModel;
+
+<form id="step3A" asp-controller="Home" asp-action="Step3A" method="post">
+
+    <label>Paying parent's annual income</label>
+    <input asp-for="@Model.PayingParentAnnualIncome" />
+    <br />
+
+    <label>Paying parent's annual pension</label>
+    <input asp-for="@Model.PayingParentAnnualPension" />
+
+    <button type="submit">Next</button>
+
+</form>

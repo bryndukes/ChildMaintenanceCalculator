@@ -7,7 +7,7 @@ namespace ChildMaintenanceCalculator.Models
 {
     public class CalculatorWrapper
     {
-        public PayingParentModel PayingParent = new PayingParentModel();
+        public PayingParent PayingParent = new PayingParent();
 
         public Calculation Calculation = new Calculation();
 

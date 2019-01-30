@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ChildMaintenanceCalculator.Models
 {
-    public class PayingParentModel
+    public class PayingParent
     {
         public bool RelevantBenefit { get; set; }
 

@@ -1,0 +1,58 @@
+﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+
+@model Step1ViewModel;
+        
+
+<form id="step1" asp-controller="Home" asp-action="Step1" method="post">
+
+
+    @{
+        int receivingParentIndex = 0;
+        foreach (Step1ReceivingParent receivingParent in Model.Step1ReceivingParents)
+        {
+            <div id="addReceivingParent">
+                <!--Give this a dynamic index based ID-->
+
+                <h2>Receiving Parent @receivingParent.Id</h2>
+
+                <label>First Name</label>
+                <input asp-for="Step1ReceivingParents[receivingParentIndex].FirstName" />
+
+                @{
+                    int childIndex = 0;
+                    foreach (Step1Child child in receivingParent.Step1Children)
+                    {
+
+                        <div id="addChild">
+                            <!--Give this a dynamic index based ID-->
+
+                            <h2>Child @child.Id</h2>
+
+                            <label>First Name</label>
+                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].FirstName" />
+                            <br />
+
+                            <label>Pre-existing Arrangements?</label>
+                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].PreExistingArrangements" />
+                            <br />
+
+                            <label>Pre-existing Arrangements Amount</label>
+                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].PreExisingArrangementsAmount" />
+
+                        </div>
+
+                        childIndex++;
+                    }
+                }
+
+            </div>
+
+            receivingParentIndex++;
+
+        }
+    }
+
+    <button type="submit">Next</button>
+
+</form>
+
