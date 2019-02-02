@@ -4,13 +4,31 @@
 
 <form id="step3B" asp-controller="Home" asp-action="Step3B" method="post">
 
-<label>How many nights per year does each child stay with the paying parent?</label>
+    <label>How many nights per year does each child stay with the paying parent?</label>
 
     @{
+        int childIndex = 0;
         foreach (Step3BChild child in Model.Step3BChildren)
         {
-            <label>@child.</label>
+            <div id="childNightsPerYearLower">
+                <h2>@child.FirstName</h2>
+
+                <label>
+                    <input asp-for="Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow" type="radio" value="Less than once per week" />
+                    Less than once per week
+                </label>
+                <br />
+                <label>
+                    <input asp-for="Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow" type="radio" value="Once per week or more" />
+                    Once per week or more
+                </label>
+
+            </div>
+
+            childIndex++;
         }
     }
+
+    <button type="submit">Next</button>
 
 </form>

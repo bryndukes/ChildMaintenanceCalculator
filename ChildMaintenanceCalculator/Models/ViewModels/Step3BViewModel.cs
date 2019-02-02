@@ -9,9 +9,12 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
     {
         public Step3BViewModel()
         {
-            Step3BChildren = new List<Step3BChild>();
-            Step3BChildren.Add(new Step3BChild());
         }
+        public Step3BViewModel(List<Step3BChild> children)
+        {
+            Step3BChildren = children;
+        }
+
         public List<Step3BChild> Step3BChildren { get; set; }
     }
 
@@ -19,8 +22,15 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
     {
         public Step3BChild()
         {
+        }
+        public Step3BChild(int id, string fName)
+        {
+            Id = id;
+            FirstName = fName;
             NightsPayingParentCaresForChildPerYearLow = string.Empty;
         }
+        public int Id { get; set; }
+        public string FirstName { get; set; }
         public string NightsPayingParentCaresForChildPerYearLow { get; set; }
     }   
 }

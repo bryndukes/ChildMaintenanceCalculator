@@ -121,8 +121,29 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpGet]
         public IActionResult Step3B()
         {
-            Step3BViewModel viewModel = new Step3BViewModel();
+            //Get all the children from the domain model into a list of children to pass in to the Step3BViewModel
+            List<Step3BChild> children = this.PeekModel().PayingParent.ReceivingParents.Where(r => r.Children.Any()).SelectMany(r => r.Children).Select(c => new Step3BChild(c.Id, c.FirstName)).ToList();
+            Step3BViewModel viewModel = new Step3BViewModel(children);
             return View("Step3B", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Step3B(Step3BViewModel vm)
+        {
+            CalculatorWrapper calculatorWrapper = this.GetModel();
+
+            //Set the nights per year lower value for each child, using the child ID as the reference
+            foreach(ReceivingParent receivingParent in calculatorWrapper.PayingParent.ReceivingParents) //TODO:Improve this with Linq
+            {
+                foreach(Child child in receivingParent.Children)
+                {
+                    child.NightsPayingParentCaresForChildPerYearLow = vm.Step3BChildren.First(c => c.Id == child.Id).NightsPayingParentCaresForChildPerYearLow;
+                }
+            }
+
+            this.StoreModel(calculatorWrapper);
+
+            return View("index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
