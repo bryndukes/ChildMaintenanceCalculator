@@ -1,0 +1,13 @@
+﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+
+@model Step5ViewModel;
+
+<form id="step5" asp-controller="Home" asp-action="Step5" method="post">
+
+    <label>For how many other children does the paying parent or their partner receive child benefit?</label>
+
+    <input asp-for="OtherSupportedChildren" />
+
+    <button type="submit">Next</button>
+
+</form>

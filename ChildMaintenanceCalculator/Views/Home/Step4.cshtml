@@ -1,0 +1,34 @@
+﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+
+@model Step4ViewModel;
+
+<form id="step4" asp-controller="Home" asp-action="Step4" method="post">
+
+    <label>On average, how many nights per year does each child stay with the paying parent?</label>
+
+    @{
+        int childIndex = 0;
+        foreach (Step4Child child in Model.Step4Children)
+        {
+            <div>
+
+                <h2>@child.FirstName</h2>
+                <input asp-for="Step4Children[childIndex].Id" type="hidden" />
+
+                <select asp-for="Step4Children[childIndex].NightsPayingParentCaresForChildPerYearHigh">
+                    <option value="<52">Less than 52 (less than once a week)</option>
+                    <option value="52-103">52 - 103 (approximately once a week)</option>
+                    <option value="104-155">104 - 155 (approximately twice a week)</option>
+                    <option value="156-174">156 - 174 (approximately three times a week)</option>
+                    <option value=">175">More than 175 (more than three times a week)</option>
+                </select>
+
+            </div>
+
+            childIndex++;
+        }
+    }
+
+    <button type="submit">Next</button>
+
+</form>

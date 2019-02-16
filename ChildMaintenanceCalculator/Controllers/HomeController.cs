@@ -37,10 +37,10 @@ namespace ChildMaintenanceCalculator.Controllers
             //Take Step1 View Model and validate
 
             //Create a new Domain Model instance
-            CalculatorWrapper calculatorWrapper = new CalculatorWrapper();
+            Calculation calculation = new Calculation();
 
             //Map data from view model to domain model - This needs to be separated into a mapper class or use AutoMapper
-            calculatorWrapper.PayingParent.ReceivingParents = vm.Step1ReceivingParents.Select(r => new ReceivingParent
+            calculation.PayingParent.ReceivingParents = vm.Step1ReceivingParents.Select(r => new ReceivingParent
             {
                 Id = r.Id,
                 FirstName = r.FirstName,
@@ -54,7 +54,7 @@ namespace ChildMaintenanceCalculator.Controllers
             }).ToList();
 
             //Store the Domin Model in Temp Data
-            this.StoreModel(calculatorWrapper);
+            this.StoreModel(calculation);
 
             //Work out which step should be shown next and redirect to the Get Action for that step
             return RedirectToAction("Step2");
@@ -72,22 +72,22 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step2(Step2ViewModel vm)
         {
-            //Get data from TempData into calculatorWrapper
-            CalculatorWrapper calculatorWrapper = this.GetModel();
+            //Get data from TempData into Calculation
+            Calculation calculation = this.GetModel();
             // Add null error handling here
 
-            //Add data from view model into calculatorWrapper
-            calculatorWrapper.PayingParent.RelevantBenefit = vm.PayingParentReceivesBenefit;
+            //Add data from view model into Calculation
+            calculation.PayingParent.RelevantBenefit = vm.PayingParentReceivesBenefit;
 
-            //Put the calculatorWrapper back into TempData
-            this.StoreModel(calculatorWrapper);
+            //Put the Calculation back into TempData
+            this.StoreModel(calculation);
 
             //Decide which step to go to next
-            if(calculatorWrapper.PayingParent.RelevantBenefit == false)
+            if(calculation.PayingParent.RelevantBenefit == false)
             {
                 return RedirectToAction("Step3A");
             }
-            else if(calculatorWrapper.PayingParent.RelevantBenefit == true)
+            else if(calculation.PayingParent.RelevantBenefit == true)
             {
                 return RedirectToAction("Step3B");
             }
@@ -107,15 +107,23 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step3A(Step3AViewModel vm)
         {
-            CalculatorWrapper calculatorWrapper = this.GetModel();
+            Calculation calculation = this.GetModel();
 
-            calculatorWrapper.PayingParent.AnnualIncome = vm.PayingParentAnnualIncome;
-            calculatorWrapper.PayingParent.AnnualPension = vm.PayingParentAnnualPension;
+            calculation.PayingParent.AnnualIncome = vm.PayingParentAnnualIncome;
+            calculation.PayingParent.AnnualPension = vm.PayingParentAnnualPension;
+            calculation.PayingParent.GrossWeeklyIncome = (calculation.PayingParent.AnnualIncome + calculation.PayingParent.AnnualPension) / 365 * 7;
 
-            this.StoreModel(calculatorWrapper);
+            this.StoreModel(calculation);
 
-            //Decide what comes next
-            return View("Index");
+            if(calculation.PayingParent.GrossWeeklyIncome <= 100)
+            {
+                return View("Result");
+            }
+            else
+            {
+                return RedirectToAction("Step4");
+            }
+
         }
 
         [HttpGet]
@@ -130,10 +138,10 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step3B(Step3BViewModel vm)
         {
-            CalculatorWrapper calculatorWrapper = this.GetModel();
+            Calculation calculation = this.GetModel();
 
             //Set the nights per year lower value for each child, using the child ID as the reference
-            foreach(ReceivingParent receivingParent in calculatorWrapper.PayingParent.ReceivingParents) //TODO:Improve this with Linq
+            foreach(ReceivingParent receivingParent in calculation.PayingParent.ReceivingParents) //TODO:Improve this with Linq
             {
                 foreach(Child child in receivingParent.Children)
                 {
@@ -141,9 +149,54 @@ namespace ChildMaintenanceCalculator.Controllers
                 }
             }
 
-            this.StoreModel(calculatorWrapper);
+            this.StoreModel(calculation);
 
-            return View("index");
+            return View("Result");
+        }
+
+        [HttpGet]
+        public IActionResult Step4()
+        {
+            List<Step4Child> children = this.PeekModel().PayingParent.ReceivingParents.Where(r => r.Children.Any()).SelectMany(r => r.Children).Select(c => new Step4Child(c.Id, c.FirstName)).ToList();
+            Step4ViewModel viewModel = new Step4ViewModel(children);
+            return View("Step4", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Step4(Step4ViewModel vm)
+        {
+            Calculation calculation = this.GetModel();
+
+            foreach (ReceivingParent receivingParent in calculation.PayingParent.ReceivingParents) //TODO:Improve this with Linq
+            {
+                foreach (Child child in receivingParent.Children)
+                {
+                    child.NightsPayingParentCaresForChildPerYearHigh = vm.Step4Children.First(c => c.Id == child.Id).NightsPayingParentCaresForChildPerYearHigh;
+                }
+            }
+
+            this.StoreModel(calculation);
+
+            return RedirectToAction("Step5");
+        }
+
+        [HttpGet]
+        public IActionResult Step5()
+        {
+            Step5ViewModel model = new Step5ViewModel();
+            return View("Step5", model);
+        }
+
+        [HttpPost]
+        public IActionResult Step5(Step5ViewModel vm)
+        {
+            var calculation = this.GetModel();
+
+            calculation.PayingParent.OtherSupportedChildren = vm.OtherSupportedChildren;
+
+            this.StoreModel(calculation);
+
+            return View("Result");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -7,8 +7,18 @@ namespace ChildMaintenanceCalculator.Models
 {
     public class Calculation
     {
-        public string RateBand { get; set; } //Should this be a class
-        public decimal TotalMaintenancePayable { get; set; }
-    }
+        public PayingParent PayingParent = new PayingParent();
 
+        public string RateBand { get; set; } //Should this be a class
+
+        public decimal TotalMaintenancePayable { get; set; }
+
+        public User User = new User();
+        //TODO: Build This
+
+        public static void Calculate()
+        {
+
+        }
+    }
 }
