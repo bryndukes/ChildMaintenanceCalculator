@@ -1,3 +1,29 @@
 ﻿@model Calculation;
 
-<h2>This is the results page!<h2>
+@{
+    <h2>Rate:</h2>
+    <label>@Model.RateBand</label>
+    <br />
+    <h2>Total:</h2>
+    <label>@Model.TotalMaintenancePayable</label>
+    <br />
+    foreach (var receivingParent in Model.PayingParent.ReceivingParents)
+    {
+        <h2>@receivingParent.FirstName</h2>
+        <h3>Total entitlement:</h3>
+        <label>@receivingParent.MaintenanceEntitlementAmount</label>
+
+        foreach (var child in receivingParent.Children)
+        {
+            <h4>@child.FirstName</h4>
+            <label>@child.ChildMaintenanceAmount</label>
+            <br />
+        }
+        <br />
+    }
+
+    <input type="button"
+           value="Start a New Calculation"
+           onclick="location.href='@Url.Action("Step1", "Home")'" />
+
+}

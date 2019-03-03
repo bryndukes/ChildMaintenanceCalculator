@@ -21,8 +21,16 @@ namespace ChildMaintenanceCalculator.Models
         public bool PreExistingMaintenanceArrangements { get; set; }
 
         public decimal PreExistingMaintenanceArrangementsAmount { get; set; }
+        
+        //Before Deduction of Pre-existing Arrangements
+        private decimal childMaintenanceAmount;
+        public decimal ChildMaintenanceAmount
+        {
+            get { return Math.Round(childMaintenanceAmount, 2); }
 
-        public decimal ChildMaintenanceAmount { get; set; } //Before Deduction of Pre-existing Arrangements
+            set { childMaintenanceAmount = value; }
+        }
+
         //Need to add a final child amount after deductions?
     }
 

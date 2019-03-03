@@ -19,10 +19,8 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
     }
     public class Step1ReceivingParent
     {
-        private static int instanceCounter;
         public Step1ReceivingParent()
         {
-            Id = ++instanceCounter;
             FirstName = string.Empty;
             Step1Children = new List<Step1Child>();
             Step1Children.Add(new Step1Child());
@@ -38,7 +36,6 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
         private static int instanceCounter; //TODO: Fix Id Counter
         public Step1Child()
         {
-            Id = ++instanceCounter; 
             FirstName = string.Empty;
         }
 

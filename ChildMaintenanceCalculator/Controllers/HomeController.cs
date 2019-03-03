@@ -13,7 +13,7 @@ namespace ChildMaintenanceCalculator.Controllers
     public class HomeController : Controller
     {
         //Each step in the form has an individual view and view model. When that step of the form is submitted with the 'next' button, 
-        // will be bound to the view model. The data from the view model will then be transferred to the domain model using AutoMapper.
+        // will be bound to the view model. The data from the view model will then be transferred to the domain model.
         // The domain model will then be stored in TempData, and the post action will redirect to the get action for the next step.
 
         public IActionResult Index()
@@ -61,6 +61,7 @@ namespace ChildMaintenanceCalculator.Controllers
 
         }
 
+        //Step 2 - Does the paying parent receive a relevant benefit
         [HttpGet]
         public IActionResult Step2()
         {
@@ -97,6 +98,7 @@ namespace ChildMaintenanceCalculator.Controllers
             }
         }
 
+        // Step 3a - Capture the paying parents income and pension contributions
         [HttpGet]
         public IActionResult Step3A()
         {
@@ -111,13 +113,12 @@ namespace ChildMaintenanceCalculator.Controllers
 
             calculation.PayingParent.AnnualIncome = vm.PayingParentAnnualIncome;
             calculation.PayingParent.AnnualPension = vm.PayingParentAnnualPension;
-            calculation.PayingParent.GrossWeeklyIncome = (calculation.PayingParent.AnnualIncome + calculation.PayingParent.AnnualPension) / 365 * 7;
 
             this.StoreModel(calculation);
 
             if(calculation.PayingParent.GrossWeeklyIncome <= 100)
             {
-                return View("Result");
+                return RedirectToAction("Result");
             }
             else
             {
@@ -126,6 +127,7 @@ namespace ChildMaintenanceCalculator.Controllers
 
         }
 
+        //Step 3b - How many nights per yer do the children stay with the paying prent (low bracket)
         [HttpGet]
         public IActionResult Step3B()
         {
@@ -150,10 +152,10 @@ namespace ChildMaintenanceCalculator.Controllers
             }
 
             this.StoreModel(calculation);
-
-            return View("Result");
+            return RedirectToAction("Result");
         }
 
+        //Step 4 - How many nights per yer do the children stay with the paying prent (high bracket)
         [HttpGet]
         public IActionResult Step4()
         {
@@ -180,6 +182,7 @@ namespace ChildMaintenanceCalculator.Controllers
             return RedirectToAction("Step5");
         }
 
+        //Step 5 - How many other children does the paying parent support
         [HttpGet]
         public IActionResult Step5()
         {
@@ -196,7 +199,17 @@ namespace ChildMaintenanceCalculator.Controllers
 
             this.StoreModel(calculation);
 
-            return View("Result");
+            return RedirectToAction("Result");
+        }
+
+        [HttpGet]
+        public IActionResult Result()
+        {
+            var calculation = this.GetModel();
+
+            calculation.Calculate();
+
+            return View("Result", calculation);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

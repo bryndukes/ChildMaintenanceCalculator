@@ -13,7 +13,10 @@ namespace ChildMaintenanceCalculator.Models
 
         public decimal AnnualPension { get; set; }
 
-        public decimal GrossWeeklyIncome { get; set; }
+        public decimal GrossWeeklyIncome
+        {
+            get { return decimal.Multiply((decimal.Divide((AnnualIncome - AnnualPension), 365)), 7); }
+        }
 
         public decimal ReducedWeeklyIncome { get; set; } //After care reductions
 

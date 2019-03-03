@@ -8,13 +8,14 @@
 
     @{
         int receivingParentIndex = 0;
+        int childIdIndex = 1;
         foreach (Step1ReceivingParent receivingParent in Model.Step1ReceivingParents)
         {
             <div id="addReceivingParent">
                 <!--Give this a dynamic index based ID-->
 
-                <h2>Receiving Parent @receivingParent.Id</h2>
-                <input asp-for="Step1ReceivingParents[receivingParentIndex].Id" type="hidden" />
+                <h2>Receiving Parent @(receivingParentIndex + 1)</h2>
+                <input asp-for="Step1ReceivingParents[receivingParentIndex].Id" type="hidden" value="@(receivingParentIndex+ 1)"/>
 
                 <label>First Name</label>
                 <input asp-for="Step1ReceivingParents[receivingParentIndex].FirstName"/>
@@ -27,8 +28,8 @@
                         <div id="addChild">
                             <!--Give this a dynamic index based ID-->
 
-                            <h2>Child @child.Id</h2>
-                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].Id" type="hidden" />
+                            <h2>Child @(childIdIndex)</h2>
+                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].Id" type="hidden" value="@(childIdIndex)"/>
 
                             <label>First Name</label>
                             <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].FirstName" />
@@ -44,6 +45,7 @@
                         </div>
 
                         childIndex++;
+                        childIdIndex++;
                     }
                 }
 
