@@ -1,7 +1,7 @@
 ﻿@using ChildMaintenanceCalculator.Models.ViewModels;
 
 @model Step1ViewModel;
-        
+
 
 <form id="step1" asp-controller="Home" asp-action="Step1" method="post">
 
@@ -15,10 +15,10 @@
                 <!--Give this a dynamic index based ID-->
 
                 <h2>Receiving Parent @(receivingParentIndex + 1)</h2>
-                <input asp-for="Step1ReceivingParents[receivingParentIndex].Id" type="hidden" value="@(receivingParentIndex+ 1)"/>
+                <input asp-for="Step1ReceivingParents[receivingParentIndex].Id" type="hidden" value="@(receivingParentIndex+ 1)" />
 
                 <label>First Name</label>
-                <input asp-for="Step1ReceivingParents[receivingParentIndex].FirstName"/>
+                <input asp-for="Step1ReceivingParents[receivingParentIndex].FirstName" />
 
                 @{
                     int childIndex = 0;
@@ -26,10 +26,10 @@
                     {
 
                         <div id="addChild">
-                            <!--Give this a dynamic index based ID-->
+                            <!--TODO: Give this a dynamic index based ID-->
 
                             <h2>Child @(childIdIndex)</h2>
-                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].Id" type="hidden" value="@(childIdIndex)"/>
+                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].Id" type="hidden" value="@(childIdIndex)" />
 
                             <label>First Name</label>
                             <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].FirstName" />
@@ -51,12 +51,27 @@
 
             </div>
 
+
+
             receivingParentIndex++;
 
         }
     }
 
+    <input type="button" id="addReceivingParent" value="+" />
+
     <button type="submit">Next</button>
 
 </form>
+
+<script>
+    $(document).ready(function() {
+
+        $("#addReceivingParent").on('click', function (){
+
+            console.log("HI");
+        });
+    });
+
+</script>
 
