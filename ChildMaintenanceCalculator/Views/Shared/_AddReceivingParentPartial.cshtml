@@ -1,0 +1,24 @@
+﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+@model Step1ReceivingParent;
+
+<div id="addReceivingParent">
+    <!--Give this a dynamic index based ID-->
+    <h2>Receiving Parent @(Model.Id)</h2>
+
+    <label>First Name</label>
+    <input asp-for="FirstName" />
+
+    <ul id="addChildrenList">
+        @{
+            int childIndex = 0;
+            foreach (Step1Child child in Model.Step1Children)
+            {
+                <li>
+                    @await Html.PartialAsync("_AddChildPartial", child)
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+

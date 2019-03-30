@@ -1,0 +1,20 @@
+﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+@model Step1Child;
+
+<div id="addChild">
+    <!--TODO: Give this a dynamic index based ID-->
+
+    <h2>Child @(Model.Id)</h2>
+
+    <label>First Name</label>
+    <input asp-for="FirstName" />
+    <br />
+
+    <label>Pre-existing Arrangements?</label>
+    <input asp-for="PreExistingArrangements" />
+    <br />
+
+    <label>Pre-existing Arrangements Amount</label>
+    <input asp-for="PreExisingArrangementsAmount" />
+
+</div>

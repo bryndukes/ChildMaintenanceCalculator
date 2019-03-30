@@ -5,58 +5,20 @@
 
 <form id="step1" asp-controller="Home" asp-action="Step1" method="post">
 
+    <ul id="addReceivingParentList">
+        @{
+            int receivingParentIndex = 0;
 
-    @{
-        int receivingParentIndex = 0;
-        int childIdIndex = 1;
-        foreach (Step1ReceivingParent receivingParent in Model.Step1ReceivingParents)
-        {
-            <div id="addReceivingParent">
-                <!--Give this a dynamic index based ID-->
+            foreach (Step1ReceivingParent receivingParent in Model.Step1ReceivingParents)
+            {
+                <li>
+                    @await Html.PartialAsync("_AddReceivingParentPartial", receivingParent)
+                </li>
 
-                <h2>Receiving Parent @(receivingParentIndex + 1)</h2>
-                <input asp-for="Step1ReceivingParents[receivingParentIndex].Id" type="hidden" value="@(receivingParentIndex+ 1)" />
-
-                <label>First Name</label>
-                <input asp-for="Step1ReceivingParents[receivingParentIndex].FirstName" />
-
-                @{
-                    int childIndex = 0;
-                    foreach (Step1Child child in receivingParent.Step1Children)
-                    {
-
-                        <div id="addChild">
-                            <!--TODO: Give this a dynamic index based ID-->
-
-                            <h2>Child @(childIdIndex)</h2>
-                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].Id" type="hidden" value="@(childIdIndex)" />
-
-                            <label>First Name</label>
-                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].FirstName" />
-                            <br />
-
-                            <label>Pre-existing Arrangements?</label>
-                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].PreExistingArrangements" />
-                            <br />
-
-                            <label>Pre-existing Arrangements Amount</label>
-                            <input asp-for="Step1ReceivingParents[receivingParentIndex].Step1Children[childIndex].PreExisingArrangementsAmount" />
-
-                        </div>
-
-                        childIndex++;
-                        childIdIndex++;
-                    }
-                }
-
-            </div>
-
-
-
-            receivingParentIndex++;
-
+                receivingParentIndex++;
+            }
         }
-    }
+    </ul>
 
     <input type="button" id="addReceivingParent" value="+" />
 
@@ -64,12 +26,19 @@
 
 </form>
 
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+        asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+        asp-fallback-test="window.jQuery"
+        crossorigin="anonymous"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+</script>
+
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-        $("#addReceivingParent").on('click', function (){
+        $("#addReceivingParent").on('click', function () {
 
-            console.log("HI");
+
         });
     });
 
