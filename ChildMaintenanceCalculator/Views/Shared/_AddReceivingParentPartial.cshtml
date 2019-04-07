@@ -1,12 +1,17 @@
 ﻿@using ChildMaintenanceCalculator.Models.ViewModels;
 @model Step1ReceivingParent;
 
-<div id="addReceivingParent">
-    <!--Give this a dynamic index based ID-->
-    <h2>Receiving Parent @(Model.Id)</h2>
+@{
+    string receivingParentIndex = ViewData["receivingParentIndex"].ToString();
+    int receivingParentId = int.Parse(receivingParentIndex) + 1;
+    string receivingParentHtmlId = $"ReceivingParent[{receivingParentIndex}]";
+    Html.ViewData.TemplateInfo.HtmlFieldPrefix = receivingParentHtmlId;
+}
+<li id="@(receivingParentId)">
+    <h2>Receiving Parent @(receivingParentId)</h2>
 
     <label>First Name</label>
-    <input asp-for="FirstName" />
+    <input asp-for="FirstName" id="@(receivingParentHtmlId + ".NameInput")" class="changeThis"/>
 
     <ul id="addChildrenList">
         @{
@@ -14,11 +19,15 @@
             foreach (Step1Child child in Model.Step1Children)
             {
                 <li>
-                    @await Html.PartialAsync("_AddChildPartial", child)
+                    @await Html.PartialAsync("_AddChildPartial", child, new ViewDataDictionary(this.ViewData) { { "childIndex", childIndex} }))
                 </li>
+
+                childIndex++; //CHILD INDEX ONLY PARENT LOCAL TODO
             }
         }
     </ul>
-</div>
+</li>
+
+
 
 

@@ -12,13 +12,13 @@ namespace ChildMaintenanceCalculator.Controllers
 {
     public class HomeController : Controller
     {
-        //Each step in the form has an individual view and view model. When that step of the form is submitted with the 'next' button, 
+        //Each step in the form has an individual view and view model. When that step of the form is submitted with the 'next' button,
         // will be bound to the view model. The data from the view model will then be transferred to the domain model.
         // The domain model will then be stored in TempData, and the post action will redirect to the get action for the next step.
 
         public IActionResult Index()
         {
-            return View(); 
+            return View();
         }
 
         //Step 1 - Add receiving parents and children
@@ -211,6 +211,19 @@ namespace ChildMaintenanceCalculator.Controllers
 
             return View("Result", calculation);
         }
+
+        [HttpPost]
+        public IActionResult Step1AddNewReceivingParent(int index)
+        {
+
+            //Create new item
+            var newReceivingParent = new Step1ReceivingParent();
+            ViewData["receivingParentIndex"] = index;
+
+            //Return partial for modified list
+            return PartialView("_AddReceivingParentPartial", newReceivingParent);
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
