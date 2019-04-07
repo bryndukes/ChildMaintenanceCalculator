@@ -1,4 +1,5 @@
 ﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+@using HtmlHelpers.BeginCollectionItemCore;
 @model Step1ReceivingParent;
 
 @{
@@ -7,26 +8,32 @@
     string receivingParentHtmlId = $"ReceivingParent[{receivingParentIndex}]";
     Html.ViewData.TemplateInfo.HtmlFieldPrefix = receivingParentHtmlId;
 }
-<li id="@(receivingParentId)">
-    <h2>Receiving Parent @(receivingParentId)</h2>
 
-    <label>First Name</label>
-    <input asp-for="FirstName" id="@(receivingParentHtmlId + ".NameInput")" class="changeThis"/>
+@{
+    using (Html.BeginCollectionItem("Step1ReceivingParents"))
+    {
+    <div id="@(receivingParentId)">
+        <h2>Receiving Parent @(receivingParentId)</h2>
 
-    <ul id="addChildrenList">
-        @{
-            int childIndex = 0;
-            foreach (Step1Child child in Model.Step1Children)
-            {
-                <li>
-                    @await Html.PartialAsync("_AddChildPartial", child, new ViewDataDictionary(this.ViewData) { { "childIndex", childIndex} }))
-                </li>
+        <label>First Name</label>
+        <input asp-for="FirstName" />
 
-                childIndex++; //CHILD INDEX ONLY PARENT LOCAL TODO
+        <div id="addChildrenList">
+            @{
+                int childIndex = 0;
+                foreach (Step1Child child in Model.Step1Children)
+                {
+                    <div>
+                        <!--Give this an index ID-->
+                        @await Html.PartialAsync("_AddChildPartial", child, new ViewDataDictionary(this.ViewData) { { "childIndex", childIndex } }))
+                    </div>
+                    childIndex++; //CHILD INDEX ONLY PARENT LOCAL TODO
+                }
             }
-        }
-    </ul>
-</li>
+        </div>
+    </div>
+    }
+}
 
 
 
