@@ -13,7 +13,7 @@
 @{
     using (Html.BeginCollectionItem("Step1Children"))
     {
-        <div id="addChild">
+        <div id="@($"addChild{childId}")" class="addChildDiv">
             <!--TODO: Give this a dynamic index based ID-->
 
             <h2>Child @(childId)</h2>

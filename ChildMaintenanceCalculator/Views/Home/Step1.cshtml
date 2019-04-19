@@ -43,11 +43,12 @@
             $("#addReceivingParentButton").on('click', function () {
                 event.preventDefault();
                 //Calculate index for new item
-                var newItemIndex = @(Model.Step1ReceivingParents.Count);
+                var newParentIndex = $(".addReceivingParentDiv").length;
+                var newChildIndex = $(".addChildDiv").length;
                 //Make request to Controller for new Partial
                 $.ajax({
                     type: "POST",
-                    url: "Step1AddNewReceivingParent/?index=" + newItemIndex,
+                    url: "Step1AddNewReceivingParent/?parentindex=" + newParentIndex + "&childindex=" + newChildIndex,
                     success: function (html) {
                         $("#addReceivingParentList").append(html);
                     },
@@ -62,10 +63,10 @@
                 event.preventDefault();
                 var targetParent = evt.target.id.substring(14);
                 console.log(targetParent);
-                var newItemIndex = @(Model.Step1ReceivingParents.SelectMany(p => p.Step1Children).Count());
+                var newChildIndex = $(".addChildDiv").length;
                 $.ajax({
                     type: "POST",
-                    url: "Step1AddNewChild/?index=" + newItemIndex,
+                    url: "Step1AddNewChild/?index=" + newChildIndex,
                     success: function (html) {
                         $("#addChildrenList" + targetParent).append(html);
                     },
@@ -75,7 +76,8 @@
                 });
             });
 
-            //TODO: Need to set the New Item Index somehow, maybe pass it back to controller, where it can be added to view data, so that the partial can render properly
+            //TODO: Still work to do on this. ATM The buttons stop working after a couple of clicks
+            //Also - the way the indexing works means if you add children to parents in the wrong order then it is not consecutive. Is this what we want?
 
         });
     </script>

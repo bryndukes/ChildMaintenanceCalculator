@@ -213,13 +213,14 @@ namespace ChildMaintenanceCalculator.Controllers
         }
 
         [HttpPost]
-        public IActionResult Step1AddNewReceivingParent(int index)
+        public IActionResult Step1AddNewReceivingParent(int parentindex, int childindex)
         {
 
             //Create new item
             var newReceivingParent = new Step1ReceivingParent();
             //Add new parent index to ViewData so that it can be used in the partial to set parent ID
-            ViewData["receivingParentIndex"] = index;
+            ViewData["receivingParentIndex"] = parentindex;
+            ViewData["firstChildIndex"] = childindex;
 
             //Return partial to be appended to view
             return PartialView("_AddReceivingParentPartial", newReceivingParent);
