@@ -12,26 +12,29 @@
 @{
     using (Html.BeginCollectionItem("Step1ReceivingParents"))
     {
-    <div id="@(receivingParentId)">
-        <h2>Receiving Parent @(receivingParentId)</h2>
+        <div id="@(receivingParentId)">
+            <h2>Receiving Parent @(receivingParentId)</h2>
+            <input asp-for="Id" type="hidden" value="@receivingParentId" />
 
-        <label>First Name</label>
-        <input asp-for="FirstName" />
+            <label>First Name</label>
+            <input asp-for="FirstName" />
 
-        <div id="addChildrenList">
-            @{
-                int childIndex = 0;
-                foreach (Step1Child child in Model.Step1Children)
-                {
-                    <div>
-                        <!--Give this an index ID-->
-                        @await Html.PartialAsync("_AddChildPartial", child, new ViewDataDictionary(this.ViewData) { { "childIndex", childIndex } }))
-                    </div>
-                    childIndex++; //CHILD INDEX ONLY PARENT LOCAL TODO
+            <div id="@($"addChildrenList{receivingParentId}")">
+                @{
+                    int childIndex = 0;
+                    foreach (Step1Child child in Model.Step1Children)
+                    {
+                        <div>
+                            <!--Give this an index ID-->
+                            @await Html.PartialAsync("_AddChildPartial", child, new ViewDataDictionary(this.ViewData) { { "childIndex", childIndex } }))
+                        </div>
+                        childIndex++; //CHILD INDEX ONLY PARENT LOCAL TODO
+                    }
                 }
-            }
+            </div>
+
+            <input type="button" id="@($"addChildButton{receivingParentId}")" class="addChildButton" value="+" />
         </div>
-    </div>
     }
 }
 

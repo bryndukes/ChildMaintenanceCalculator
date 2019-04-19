@@ -40,13 +40,9 @@
     <script>
         $(document).ready(function () {
 
-            $(".changeThis").on('click', function () {
-
-            });
-
             $("#addReceivingParentButton").on('click', function () {
                 event.preventDefault();
-                @*var list = @Html.Raw(JsonConvert.SerializeObject(Model));*@
+                //Calculate index for new item
                 var newItemIndex = @(Model.Step1ReceivingParents.Count);
                 //Make request to Controller for new Partial
                 $.ajax({
@@ -54,6 +50,24 @@
                     url: "Step1AddNewReceivingParent/?index=" + newItemIndex,
                     success: function (html) {
                         $("#addReceivingParentList").append(html);
+                    },
+                    error: function (jqHXR, textStatus, errorThrown) {
+                        alert("Could not add new item: " + textStatus);
+                    }
+                });
+            });
+
+            $(".addChildButton").on('click', function (evt) {
+                console.log("Hit");
+                event.preventDefault();
+                var targetParent = evt.target.id.substring(14);
+                console.log(targetParent);
+                var newItemIndex = @(Model.Step1ReceivingParents.SelectMany(p => p.Step1Children).Count());
+                $.ajax({
+                    type: "POST",
+                    url: "Step1AddNewChild/?index=" + newItemIndex,
+                    success: function (html) {
+                        $("#addChildrenList" + targetParent).append(html);
                     },
                     error: function (jqHXR, textStatus, errorThrown) {
                         alert("Could not add new item: " + textStatus);

@@ -11,7 +11,6 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
         {
             Step1ReceivingParents = new List<Step1ReceivingParent>();
             Step1ReceivingParents.Add(new Step1ReceivingParent());
-            Step1ReceivingParents.Add(new Step1ReceivingParent()); //FOR TESTING - REMOVE ONCE ADD AND REMOVE BUTTONS ARE IMPLEMENTED
         }
 
         public List<Step1ReceivingParent> Step1ReceivingParents { get; set; }
@@ -24,9 +23,8 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
             FirstName = string.Empty;
             Step1Children = new List<Step1Child>();
             Step1Children.Add(new Step1Child());
-            Step1Children.Add(new Step1Child()); //FOR TESTING - REMOVE ONCE ADD AND REMOVE BUTTONS ARE IMPLEMENTED
         }
-        
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public List<Step1Child> Step1Children { get; set; }
