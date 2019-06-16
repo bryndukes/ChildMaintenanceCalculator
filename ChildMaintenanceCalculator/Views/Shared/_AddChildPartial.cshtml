@@ -4,14 +4,14 @@
 
 @{
     string parentHtmlFieldPrefix = Html.ViewData.TemplateInfo.HtmlFieldPrefix;
-    string childIndex = ViewData["childIndex"].ToString();
+    string childIndex = ViewData.ContainsKey("childIndex") ? ViewData["childIndex"].ToString() : "0";
     int childId = int.Parse(childIndex) + 1;
     string childHtmlId = $"{parentHtmlFieldPrefix}.Child[{childIndex}]";
-    Html.ViewData.TemplateInfo.HtmlFieldPrefix = childHtmlId;
+    string collectionNamePrefix = (bool)ViewData["firstChild"] ? "" : parentHtmlFieldPrefix + ".";
 }
 
 @{
-    using (Html.BeginCollectionItem("Step1Children"))
+    using (Html.BeginCollectionItem(collectionNamePrefix + "Step1Children"))
     {
         <div id="@($"addChild{childId}")" class="addChildDiv">
             <!--TODO: Give this a dynamic index based ID-->

@@ -220,20 +220,23 @@ namespace ChildMaintenanceCalculator.Controllers
             var newReceivingParent = new Step1ReceivingParent();
             //Add new parent index to ViewData so that it can be used in the partial to set parent ID
             ViewData["receivingParentIndex"] = parentindex;
-            ViewData["firstChildIndex"] = childindex;
+            ViewData["childIndex"] = childindex;
+            ViewData["firstChild"] = true;
 
             //Return partial to be appended to view
             return PartialView("_AddReceivingParentPartial", newReceivingParent);
         }
 
         [HttpPost]
-        public IActionResult Step1AddNewChild(int index)
+        public IActionResult Step1AddNewChild(int index, string parentHtmlFieldPrefix)
         {
 
             //Create new item
             var newChild = new Step1Child();
             //Add new child index to ViewData so that it can be used in the partial to set child ID
             ViewData["childIndex"] = index;
+            ViewData["firstChild"] = false;
+            ViewData.TemplateInfo.HtmlFieldPrefix = parentHtmlFieldPrefix;
 
             //Return partial to be appended to view
             return PartialView("_AddChildPartial", newChild);

@@ -1,15 +1,16 @@
 ﻿@using ChildMaintenanceCalculator.Models.ViewModels;
 @using  Newtonsoft.Json;
 @using HtmlHelpers.BeginCollectionItemCore;
+@using ExtensionMethods;
 
 @model Step1ViewModel;
 
 @{
-//View creates partials for each Receiving Parent within the view model (1 at first), and within that, the rp partial creates a child partial
-//for each child in the receiving parent (1 at first). The fields in those partials map to the objects in their model. HtmlFieldPrefix can be used
-//To keep track of which parent a child belongs to.
-//When a new parent is added, the whole view model will need to be rebuilt at the server with the additional parent, and the view regenerted.
-//When a new child is added, the parent view model will need to be rebuilt at the server and the view regenerated.
+    //View creates partials for each Receiving Parent within the view model (1 at first), and within that, the rp partial creates a child partial
+    //for each child in the receiving parent (1 at first). The fields in those partials map to the objects in their model.
+    //HtmlFieldPrefix can be used to keep track of which parent a child belongs to.
+    //When a new parent is added, the whole view model will need to be rebuilt at the server with the additional parent, and the view regenerted.
+    //When a new child is added, the parent view model will need to be rebuilt at the server and the view regenerated.
 }
 
 
@@ -23,7 +24,7 @@
 
                 foreach (Step1ReceivingParent receivingParent in Model.Step1ReceivingParents)
                 {
-                    @await Html.PartialAsync("_AddReceivingParentPartial", receivingParent, new ViewDataDictionary(this.ViewData) { { "receivingParentIndex", receivingParentIndex } })
+                    Html.PartialFor(model => receivingParent, "_AddReceivingParentPartial");
                     receivingParentIndex++;
                 }
             }
@@ -57,27 +58,6 @@
                     }
                 });
             });
-
-            $(".addChildButton").on('click', function (evt) {
-                console.log("Hit");
-                event.preventDefault();
-                var targetParent = evt.target.id.substring(14);
-                console.log(targetParent);
-                var newChildIndex = $(".addChildDiv").length;
-                $.ajax({
-                    type: "POST",
-                    url: "Step1AddNewChild/?index=" + newChildIndex,
-                    success: function (html) {
-                        $("#addChildrenList" + targetParent).append(html);
-                    },
-                    error: function (jqHXR, textStatus, errorThrown) {
-                        alert("Could not add new item: " + textStatus);
-                    }
-                });
-            });
-
-            //TODO: Still work to do on this. ATM The buttons stop working after a couple of clicks
-            //Also - the way the indexing works means if you add children to parents in the wrong order then it is not consecutive. Is this what we want?
 
         });
     </script>

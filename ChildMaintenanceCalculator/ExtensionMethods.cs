@@ -1,9 +1,14 @@
 ﻿using ChildMaintenanceCalculator.Models;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ExtensionMethods
@@ -38,4 +43,24 @@ namespace ExtensionMethods
             return model;
         }
     }
+
+    public static class HtmlHelperExtensionMethods
+    {
+        public static ModelExplorer GetModelExplorer<TModel, TResult>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TResult>> expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+            return ExpressionMetadataProvider.FromLambdaExpression(expression, htmlHelper.ViewData, htmlHelper.MetadataProvider);
+        }
+
+        public static IHtmlContent PartialFor<TModel, TResult>(this IHtmlHelper<TModel> helper, Expression<Func<TModel, TResult>> expression, string partialViewName, string prefix = "")
+        {
+            var modelExplorer = helper.GetModelExplorer(expression);
+            var viewData = new ViewDataDictionary(helper.ViewData);
+            viewData.TemplateInfo.HtmlFieldPrefix += prefix;
+            viewData["firstChild"] = true;
+            return helper.Partial(partialViewName, modelExplorer.Model, viewData);
+        }
+    }
+
 }
