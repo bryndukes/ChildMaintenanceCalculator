@@ -61,5 +61,32 @@
 
         });
     </script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $(document).on('click', ".addChildButton", function (evt) {
+                event.preventDefault();
+                var buttonClickedParentId = evt.target.getAttribute("data-addchildbtnid");
+                console.log("Hit" + buttonClickedParentId);
+                var targetParent = "addChildrenList" + buttonClickedParentId;
+                var parentHtmlFieldPrefix = evt.target.getAttribute("data-htmlfieldprefix");
+                var newChildIndex = $(".addChildDiv").length;
+                $.ajax({
+                    type: "POST",
+                    url: "Step1AddNewChild/?index=" + newChildIndex + "&parentHtmlFieldPrefix=" + parentHtmlFieldPrefix,
+                    success: function (html) {
+                        $("#" +targetParent).append(html);
+                    },
+                    error: function (jqHXR, textStatus, errorThrown) {
+                        alert("Could not add new item: " + textStatus);
+                    }
+                });
+            });
+
+        });
+    </script>
+
 </div>
 

@@ -39,38 +39,14 @@
                     }
                 </div>
 
-                <input type="button" id="addChildButton" class="addChildButton" value="+" data-chdbtnid="@receivingParentId" />
+                <input type="button" id="addChildButton" class="addChildButton" value="+" data-addchildbtnid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
             </div>
 
 
         }
     }
 
-    <script>
 
-    $(document).ready(function () {
-
-        $(document).on('click', ".addChildButton", function (evt) {
-            console.log("Hit");
-            event.preventDefault();
-            var buttonClickedParentId = evt.target.getAttribute("data-chdbtnid");
-            var targetParent = "addChildrenList" + buttonClickedParentId;
-            var parentHtmlFieldPrefix = "@htmlFieldPrefix";
-            var newChildIndex = $(".addChildDiv").length;
-            $.ajax({
-                type: "POST",
-                url: "Step1AddNewChild/?index=" + newChildIndex + "&parentHtmlFieldPrefix=" + parentHtmlFieldPrefix,
-                success: function (html) {
-                    $("#" +targetParent).append(html);
-                },
-                error: function (jqHXR, textStatus, errorThrown) {
-                    alert("Could not add new item: " + textStatus);
-                }
-            });
-        });
-
-    });
-    </script>
 
 
 
