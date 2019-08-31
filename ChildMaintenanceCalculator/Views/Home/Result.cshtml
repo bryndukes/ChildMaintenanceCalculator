@@ -1,29 +1,17 @@
-﻿@model Calculation;
+﻿@using ExtensionMethods
+@using Microsoft.EntityFrameworkCore.Infrastructure
+@using ChildMaintenanceCalculator.Models;
+@model Calculation;
 
 @{
-    <h2>Rate:</h2>
-    <label>@Model.RateBand</label>
-    <br />
-    <h2>Total:</h2>
-    <label>@Model.TotalMaintenancePayable</label>
-    <br />
-    foreach (var receivingParent in Model.PayingParent.ReceivingParents)
-    {
-        <h2>@receivingParent.FirstName</h2>
-        <h3>Total entitlement:</h3>
-        <label>@receivingParent.MaintenanceEntitlementAmount</label>
 
-        foreach (var child in receivingParent.Children)
-        {
-            <h4>@child.FirstName</h4>
-            <label>@child.ChildMaintenanceAmount</label>
-            <br />
-        }
-        <br />
-    }
+    @Html.PartialFor(model => model, "_ResultPartial");
+
+    @Html.PartialFor(model => model.User, "_EmailResultPartial");
+
+    <br />
 
     <input type="button"
            value="Start a New Calculation"
            onclick="location.href='@Url.Action("Step1", "Home")'" />
-
 }

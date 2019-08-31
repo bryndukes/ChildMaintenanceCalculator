@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ChildMaintenanceCalculator.Models;
 using ChildMaintenanceCalculator.Models.ViewModels;
+using ChildMaintenanceCalculator.Services;
 using ExtensionMethods;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace ChildMaintenanceCalculator.Controllers
 {
@@ -15,6 +17,15 @@ namespace ChildMaintenanceCalculator.Controllers
         //Each step in the form has an individual view and view model. When that step of the form is submitted with the 'next' button,
         // will be bound to the view model. The data from the view model will then be transferred to the domain model.
         // The domain model will then be stored in TempData, and the post action will redirect to the get action for the next step.
+
+        private IViewRenderService viewRenderService;
+        private IEmailSenderService emailSenderService;
+
+        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService)
+        {
+            this.viewRenderService = viewRenderService;
+            this.emailSenderService = emailSenderService;
+        }
 
         public IActionResult Index()
         {
@@ -37,6 +48,7 @@ namespace ChildMaintenanceCalculator.Controllers
             //Take Step1 View Model and validate
 
             //Create a new Domain Model instance
+            //TODO: Review where this should be - should it really be a class level private variable? Also could it be injected?
             Calculation calculation = new Calculation();
 
             //Map data from view model to domain model - This needs to be separated into a mapper class or use AutoMapper
@@ -59,6 +71,36 @@ namespace ChildMaintenanceCalculator.Controllers
             //Work out which step should be shown next and redirect to the Get Action for that step
             return RedirectToAction("Step2");
 
+        }
+
+        [HttpPost]
+        public IActionResult Step1AddNewReceivingParent(int parentindex, int childindex)
+        {
+
+            //Create new item
+            var newReceivingParent = new Step1ReceivingParent();
+            //Add new parent index to ViewData so that it can be used in the partial to set parent ID
+            ViewData["receivingParentIndex"] = parentindex;
+            ViewData["childIndex"] = childindex;
+            ViewData["firstChild"] = true;
+
+            //Return partial to be appended to view
+            return PartialView("_AddReceivingParentPartial", newReceivingParent);
+        }
+
+        [HttpPost]
+        public IActionResult Step1AddNewChild(int index, string parentHtmlFieldPrefix)
+        {
+
+            //Create new item
+            var newChild = new Step1Child();
+            //Add new child index to ViewData so that it can be used in the partial to set child ID
+            ViewData["childIndex"] = index;
+            ViewData["firstChild"] = false;
+            ViewData.TemplateInfo.HtmlFieldPrefix = parentHtmlFieldPrefix;
+
+            //Return partial to be appended to view
+            return PartialView("_AddChildPartial", newChild);
         }
 
         //Step 2 - Does the paying parent receive a relevant benefit
@@ -209,37 +251,29 @@ namespace ChildMaintenanceCalculator.Controllers
 
             calculation.Calculate();
 
+            this.StoreModel(calculation);
+
             return View("Result", calculation);
         }
 
         [HttpPost]
-        public IActionResult Step1AddNewReceivingParent(int parentindex, int childindex)
+        public async void EmailResult(string emailAddress)
         {
+            if (String.IsNullOrEmpty(emailAddress))
+            {
+                //TODO:Handle this error somehow?
+                //Validation should be added to the model property so that will be handled by that, so this would probably be an unexpected exception?
+            }
 
-            //Create new item
-            var newReceivingParent = new Step1ReceivingParent();
-            //Add new parent index to ViewData so that it can be used in the partial to set parent ID
-            ViewData["receivingParentIndex"] = parentindex;
-            ViewData["childIndex"] = childindex;
-            ViewData["firstChild"] = true;
+            var model = this.PeekModel();
+            var contextAccessor = new ActionContextAccessor();
+            contextAccessor.ActionContext = ControllerContext;
+            var emailBody = await viewRenderService.RenderToStringAsync("_ResultPartial", contextAccessor, model);
 
-            //Return partial to be appended to view
-            return PartialView("_AddReceivingParentPartial", newReceivingParent);
-        }
+            emailSenderService.SendEmail(emailBody, emailAddress);
 
-        [HttpPost]
-        public IActionResult Step1AddNewChild(int index, string parentHtmlFieldPrefix)
-        {
+            //TODO: This needs to actually return a success flag so the user can know if the email was sent?
 
-            //Create new item
-            var newChild = new Step1Child();
-            //Add new child index to ViewData so that it can be used in the partial to set child ID
-            ViewData["childIndex"] = index;
-            ViewData["firstChild"] = false;
-            ViewData.TemplateInfo.HtmlFieldPrefix = parentHtmlFieldPrefix;
-
-            //Return partial to be appended to view
-            return PartialView("_AddChildPartial", newChild);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

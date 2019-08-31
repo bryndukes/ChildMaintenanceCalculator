@@ -1,0 +1,37 @@
+﻿@model  User;
+
+<div>
+    <form id="emailResult" enctype="multipart/form-data">
+
+        <h2>Send Results</h2>
+        <p>Enter an email address below to send an email containing your calculation results</p>
+
+        <input type="text" class="email-address" name="EmailAddress" />
+
+        <button type="submit" name="submit">Email Results</button>
+
+    </form>
+</div>
+
+<script>
+    $("#emailResult").on('submit', function (event) {
+        event.preventDefault();
+
+        var emailAddress = $('.email-address').val(); //TODO: Try using ID instead of class here
+
+        if (emailAddress) {
+            $.ajax({
+                url: '/Home/EmailResult',
+                datatype: 'json',
+                data: { emailAddress: emailAddress  },
+                type: 'POST',
+                success: function () {
+                    alert("Email sent successfully");
+                },
+                error: function() {
+                    alert("Error sending email, please try again");
+                }
+            });
+        }
+    });
+</script>

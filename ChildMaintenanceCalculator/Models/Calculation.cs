@@ -7,7 +7,12 @@ namespace ChildMaintenanceCalculator.Models
 {
     public class Calculation
     {
+        //TODO: Set up all models to use Dependency Injection?
+        //TODO: Encapsulate the properties of this class is possible? or do you not do that with MVC models?
+
         public PayingParent PayingParent = new PayingParent();
+
+        public User User = new User();
 
         public string RateBand { get; set; } //Should this be a class/Enum
 
@@ -24,8 +29,6 @@ namespace ChildMaintenanceCalculator.Models
         //    get { return PayingParent.ReceivingParents.SelectMany(r => r.Children).Sum(c => c.ChildMaintenanceAmount); }
         //}
 
-        public User User = new User();
-        //TODO: Build This
 
         //Calculates the total child maintenance amount payable for each child individually
         public void Calculate()
