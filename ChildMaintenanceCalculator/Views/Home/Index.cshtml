@@ -1,6 +1,31 @@
-﻿<label>This is the Start Page!</label>
+﻿<div class="form-page-wrap">
+    <div class="form-page-content">
+        
+        <div>
+            <h3 class="calculator-title">
+                Child Maintenance Calculator
+            </h3>
+        </div>
+        
+        <div class="form-block">
+            <span>
+                This tool can be used to calculate the amount of child maintenance that should be paid by a parent in the UK. You can use it if you are married, divorced, a civil partner or a co-habitant. You can even use it if you are a lawyer, mediator, arbitrator or judge. (All users are welcome). The form will only take a few minutes to complete.
+                <br />
+                <br />
+                An important feature of this calculator is that the results are clearly laid out so you and your co- parent can be assured of accuracy and transparency to aid discussions. The result will be automatically converted into a PDF document which you can download or send directly to your inbox. You can ask the calculator to email the calculation to your co-parent, lawyer or mediator, if you so wish.
+                <br />
+                <br />
+                The Child Maintenance Calculator is based on the rules introduced by the Child Maintenance Service on 29th July 2013. It uses a gross income model and applies different rates (or a combination of rates) in 5 bands:
+                <br />
+                <br />
+                <b>How we use your information</b>
+                <br />
+                The calculator requires information from you in order to complete a calculation accurately. This information will not be used for any other purpose than to complete this calculation and will not be stored after you leave the calculator. Your information will not be shared with any third party.
+            </span>
+        </div>
 
-<br />
+        <input type="button" class="form-next-button" value="Start Calculation" onclick="location.href='@Url.Action("Step1", "Home")'" />
 
-<input type="button" value="Start Calculation" onclick="location.href='@Url.Action("Step1", "Home")'" />
+    </div>
+</div>
 

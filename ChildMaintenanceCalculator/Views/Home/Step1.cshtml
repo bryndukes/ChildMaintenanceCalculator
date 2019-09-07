@@ -6,6 +6,7 @@
 @model Step1ViewModel;
 
 @{
+    //TODO: Update the comments
     //View creates partials for each Receiving Parent within the view model (1 at first), and within that, the rp partial creates a child partial
     //for each child in the receiving parent (1 at first). The fields in those partials map to the objects in their model.
     //HtmlFieldPrefix can be used to keep track of which parent a child belongs to.
@@ -13,80 +14,106 @@
     //When a new child is added, the parent view model will need to be rebuilt at the server and the view regenerated.
 }
 
+    <div class="form-page-wrap">
+        <div id="Step1Page" class="form-page-content">
 
-<div id="Step1Page">
+            <div>
+                <h3 class="calculator-title">
+                    Child Maintenance Calculator
+                </h3>
+            </div>
+            <div class="form-page-header">
+                <div>
+                    <h3 class="form-step-title">
+                        Step 1
+                    </h3>
+                </div>
+                <div class="form-step-instruction">
+                    <span>
+                        Please enter the first name of each parent who will receive maintenance payments, and the first name of each child for whom maintenance is paid
+                    </span>
+                </div>
+                <div class="form-step-subinstruction">
+                    <span>
+                        Pre-existing child maintenance arrangements can also be taken into account. If the paying parent has preexisting arrangements for any of their children, add them here and check the pre-existing arrangements box to add the amount.
+                    </span>
+                </div>
+            </div>
 
-    <form id="step1" asp-controller="Home" asp-action="Step1" method="post">
 
-        <div id="addReceivingParentList">
-            @{
-                int receivingParentIndex = 0;
+            <form id="step1" asp-controller="Home" asp-action="Step1" method="post">
 
-                foreach (Step1ReceivingParent receivingParent in Model.Step1ReceivingParents)
-                {
-                    Html.PartialFor(model => receivingParent, "_AddReceivingParentPartial");
-                    receivingParentIndex++;
-                }
-            }
+                <div id="addReceivingParentList">
+                    @{
+                        int receivingParentIndex = 0;
+
+                        foreach (Step1ReceivingParent receivingParent in Model.Step1ReceivingParents)
+                        {
+                            Html.PartialFor(model => receivingParent, "_AddReceivingParentPartial");
+                            //TODO: Both these partial render lines lead to dodgy ID numbers on the children
+                            //@await Html.PartialAsync("_AddReceivingParentPartial", receivingParent);
+                            receivingParentIndex++;
+                        }
+                    }
+                </div>
+
+                <input type="button" id="addReceivingParentButton" value="Add Parent" class="form-add-button" />
+                <br/>
+                <button type="submit" class="form-next-button">Next</button>
+
+            </form>
+
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+            <script>
+                $(document).ready(function () {
+
+                    $("#addReceivingParentButton").on('click', function () {
+                        event.preventDefault();
+                        //Calculate index for new item
+                        var newParentIndex = $(".add-receiving-parent-div").length;
+                        var newChildIndex = $(".add-child-div").length;
+                        //Make request to Controller for new Partial
+                        $.ajax({
+                            type: "POST",
+                            url: "Step1AddNewReceivingParent/?parentindex=" + newParentIndex + "&childindex=" + newChildIndex,
+                            success: function (html) {
+                                $("#addReceivingParentList").append(html);
+                            },
+                            error: function (jqHXR, textStatus, errorThrown) {
+                                alert("Could not add new item: " + textStatus);
+                            }
+                        });
+                    });
+
+                });
+            </script>
+
+            <script>
+
+                $(document).ready(function () {
+
+                    $(document).on('click', ".addChildButton", function (evt) {
+                        event.preventDefault();
+                        var buttonClickedParentId = evt.target.getAttribute("data-addchildbtnid");
+                        console.log("Hit" + buttonClickedParentId);
+                        var targetParent = "addChildrenList" + buttonClickedParentId;
+                        var parentHtmlFieldPrefix = evt.target.getAttribute("data-htmlfieldprefix");
+                        var newChildIndex = $(".addChildDiv").length;
+                        $.ajax({
+                            type: "POST",
+                            url: "Step1AddNewChild/?index=" + newChildIndex + "&parentHtmlFieldPrefix=" + parentHtmlFieldPrefix,
+                            success: function (html) {
+                                $("#" + targetParent).append(html);
+                            },
+                            error: function (jqHXR, textStatus, errorThrown) {
+                                alert("Could not add new item: " + textStatus);
+                            }
+                        });
+                    });
+
+                });
+            </script>
+
         </div>
-
-        <input type="button" id="addReceivingParentButton" value="+" />
-
-        <button type="submit">Next</button>
-
-    </form>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-
-            $("#addReceivingParentButton").on('click', function () {
-                event.preventDefault();
-                //Calculate index for new item
-                var newParentIndex = $(".addReceivingParentDiv").length;
-                var newChildIndex = $(".addChildDiv").length;
-                //Make request to Controller for new Partial
-                $.ajax({
-                    type: "POST",
-                    url: "Step1AddNewReceivingParent/?parentindex=" + newParentIndex + "&childindex=" + newChildIndex,
-                    success: function (html) {
-                        $("#addReceivingParentList").append(html);
-                    },
-                    error: function (jqHXR, textStatus, errorThrown) {
-                        alert("Could not add new item: " + textStatus);
-                    }
-                });
-            });
-
-        });
-    </script>
-
-    <script>
-
-        $(document).ready(function () {
-
-            $(document).on('click', ".addChildButton", function (evt) {
-                event.preventDefault();
-                var buttonClickedParentId = evt.target.getAttribute("data-addchildbtnid");
-                console.log("Hit" + buttonClickedParentId);
-                var targetParent = "addChildrenList" + buttonClickedParentId;
-                var parentHtmlFieldPrefix = evt.target.getAttribute("data-htmlfieldprefix");
-                var newChildIndex = $(".addChildDiv").length;
-                $.ajax({
-                    type: "POST",
-                    url: "Step1AddNewChild/?index=" + newChildIndex + "&parentHtmlFieldPrefix=" + parentHtmlFieldPrefix,
-                    success: function (html) {
-                        $("#" +targetParent).append(html);
-                    },
-                    error: function (jqHXR, textStatus, errorThrown) {
-                        alert("Could not add new item: " + textStatus);
-                    }
-                });
-            });
-
-        });
-    </script>
-
-</div>
-
+    </div>

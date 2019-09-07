@@ -17,12 +17,26 @@
             int receivingParentId = int.Parse(receivingParentIndex) + 1;
             string receivingParentHtmlId = $"ReceivingParent[{receivingParentIndex}]";
 
-            <div id="@($"addReceivingParent{receivingParentId}")" class="addReceivingParentDiv">
-                <h2>Receiving Parent @(receivingParentId)</h2>
-                <input asp-for="Id" type="hidden" value="@receivingParentId" />
+            <div id="@($"addReceivingParent{receivingParentId}")" class="add-receiving-parent-div form-block">
+                
+                @{
+                    if (receivingParentId > 1)
+                    {
+                        <hr/>
+                    }
+                }
+                
+                <div>
+                    <label class="receiving-parent-title">Receiving Parent @(receivingParentId)</label>
+                    <input asp-for="Id" type="hidden" value="@receivingParentId" />
+                </div>
 
-                <label>First Name</label>
-                <input asp-for="FirstName" />
+                <div class="form-field">
+                    <label class="form-label">What is the receiving parent's first name?</label>
+                    <div>
+                        <input asp-for="FirstName" />
+                    </div>
+                </div>
 
                 <div id="@($"addChildrenList{receivingParentId}")">
                     @{
@@ -32,14 +46,15 @@
                         foreach (Step1Child child in Model.Step1Children)
                         {
                             <div>
-                                @Html.PartialFor(model => child, "_AddChildPartial");
+                                @Html.PartialFor(model => child, "_AddChildPartial")
                             </div>
                             childIndex++;
                         }
                     }
                 </div>
 
-                <input type="button" id="addChildButton" class="addChildButton" value="+" data-addchildbtnid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
+                <input type="button" id="addChildButton" class="addChildButton form-add-button" value="Add Child" data-addchildbtnid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
+            
             </div>
 
 

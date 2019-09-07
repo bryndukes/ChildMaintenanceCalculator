@@ -1,32 +1,129 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
-for details on configuring this project to bundle and minify static web assets. */
-body {
+﻿
+/*TODO: Convert all sizes to px*/
+
+.custom-body {
     padding-top: 50px;
     padding-bottom: 20px;
+    line-height: 1.7;
+    font-size: 16px;
+    font-family: "Lato",sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    color: rgb(52,52,52);
+    background-color: #f3f3f3;
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.form-page-wrap {
+    padding: 30px !important;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135);
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
+.form-page-content {
+
 }
 
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
+.calculator-title {
+    font-weight: 700;
 }
 
-/* QR code generator */
-#qrCode {
-    margin: 15px;
+.form-page-header {
+    margin-bottom: 20px;
 }
+
+.form-step-title {
+    opacity: .6;
+}
+
+.form-step-instruction {
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    font-weight: 600;
+    opacity: .8;
+}
+
+.form-step-subinstruction {
+    
+}
+
+.form-block {
+    margin-top: 1.313em;
+}
+
+.form-next-button {
+    background-color: #f7941d;
+    color: #fff;
+    text-shadow: 0 0.075em 0.075em rgba(0,0,0,0.5);
+    line-height: 1.3;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.813em 1.125em 0.813em;
+    border: none;
+    margin-top: 1.313em;
+}
+
+.form-add-button {
+    background-color: #33cc33;
+    color: #fff;
+    text-shadow: 0 0.075em 0.075em rgba(0,0,0,0.5);
+    line-height: 1.3;
+    text-align: center;
+    vertical-align: middle;
+    width: 120px;
+    padding: 0.513em 1em 0.513em;
+    border: none;
+    margin-top: 1.313em;
+}
+
+.form-label {
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: .43767em;
+    display: inline-block;
+}
+
+.form-field {
+    margin-bottom: 1.313em;
+}
+
+.receiving-parent-title {
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: 600;
+    opacity: .8;
+}
+
+.child-title {
+    font-size: 17px;
+    line-height: 1.5;
+    font-weight: 600;
+    opacity: .8;
+}
+
+.add-child-div {
+    margin-left: 20px !important;
+}
+
+input[type="text"] {
+    display: inline-block;
+    height: 2.65em;
+    margin-bottom: 9px;
+    border: 1px solid #ddd;
+    padding: 0 .65em;
+    font-size: 13px;
+    line-height: normal;
+    color: #555;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+}
+
+
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {

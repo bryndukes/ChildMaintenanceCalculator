@@ -13,22 +13,36 @@
 @{
     using (Html.BeginCollectionItem(collectionNamePrefix + "Step1Children"))
     {
-        <div id="@($"addChild{childId}")" class="addChildDiv">
+        <div id="@($"addChild{childId}")" class="add-child-div form-block">
             <!--TODO: Give this a dynamic index based ID-->
+            
+            <div>
+                <label class="child-title">Child @(childId)</label>
+                <input asp-for="Id" type="hidden" value="@childId" />
+            </div>
+            
+            <div class="form-field">
+                <label class="form-label">What is the child's first name?</label>
+                <div>
+                    <input asp-for="FirstName" />
+                </div>
+            </div>
 
-            <h2>Child @(childId)</h2>
-            <input asp-for="Id" type="hidden" value="@childId" />
+            <div class="form-field">
+                <label class="form-label">Are there any pre-existing arrangements for this child?</label>
+                <div>
+                    <input asp-for="PreExistingArrangements" />
+                </div>
+            </div>
+            
+            <!--TODO: Make this conditionally visible dependinh on checkbox above-->
+            <div class="form-field">
+                <label class="form-label">How much is paid per week is paid to the receiving parent for this child?</label>
+                <div>
+                    <input asp-for="PreExisingArrangementsAmount" />
+                </div>
+            </div>
 
-            <label>First Name</label>
-            <input asp-for="FirstName" />
-            <br />
-
-            <label>Pre-existing Arrangements?</label>
-            <input asp-for="PreExistingArrangements"/>
-            <br />
-
-            <label>Pre-existing Arrangements Amount</label>
-            <input asp-for="PreExisingArrangementsAmount" />
 
         </div>
     }
