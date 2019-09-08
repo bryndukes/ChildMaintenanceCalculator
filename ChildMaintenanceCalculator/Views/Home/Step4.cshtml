@@ -2,33 +2,65 @@
 
 @model Step4ViewModel;
 
-<form id="step4" asp-controller="Home" asp-action="Step4" method="post">
 
-    <label>On average, how many nights per year does each child stay with the paying parent?</label>
-
-    @{
-        int childIndex = 0;
-        foreach (Step4Child child in Model.Step4Children)
-        {
+<div class="form-page-wrap">
+    <div class="form-page-content">
+        
+        <div>
+            <h3 class="calculator-title">
+                Child Maintenance Calculator
+            </h3>
+        </div>
+        <div class="form-page-header">
             <div>
-
-                <h2>@child.FirstName</h2>
-                <input asp-for="Step4Children[childIndex].Id" type="hidden" />
-
-                <select asp-for="Step4Children[childIndex].NightsPayingParentCaresForChildPerYearHigh">
-                    <option value="<52">Less than 52 (less than once a week)</option>
-                    <option value="52-103">52 - 103 (approximately once a week)</option>
-                    <option value="104-155">104 - 155 (approximately twice a week)</option>
-                    <option value="156-174">156 - 174 (approximately three times a week)</option>
-                    <option value=">175">More than 175 (more than three times a week)</option>
-                </select>
-
+                <h3 class="form-step-title">
+                    Step 4
+                </h3>
             </div>
+        </div>
+        
+        <form id="step4" asp-controller="Home" asp-action="Step4" method="post">
 
-            childIndex++;
-        }
-    }
+            <div class="form-block">
+                <label class="form-label">
+                    On average, how many nights per year does each child stay with the paying parent?
+                </label>
 
-    <button type="submit">Next</button>
+                @{
+                    int childIndex = 0;
+                    foreach (Step4Child child in Model.Step4Children)
+                    {
+                        <div class="form-block">
 
-</form>
+                            <div class="form-field">
+                                <div>
+                                    <label class="receiving-parent-title">
+                                        @child.FirstName
+                                    </label>
+                                    <input asp-for="Step4Children[childIndex].Id" type="hidden" />
+                                </div>
+
+                                <div>
+                                    <select asp-for="Step4Children[childIndex].NightsPayingParentCaresForChildPerYearHigh" class="form-ddl">
+                                        <option value="<52">Less than 52 (less than once a week)</option>
+                                        <option value="52-103">52 - 103 (approximately once a week)</option>
+                                        <option value="104-155">104 - 155 (approximately twice a week)</option>
+                                        <option value="156-174">156 - 174 (approximately three times a week)</option>
+                                        <option value=">175">More than 175 (more than three times a week)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        childIndex++;
+                    }
+                }
+            </div>
+            
+
+            <button type="submit" class="form-next-button">Next</button>
+
+        </form>
+
+    </div>
+</div>

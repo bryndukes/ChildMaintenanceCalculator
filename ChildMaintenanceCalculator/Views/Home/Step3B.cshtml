@@ -2,35 +2,56 @@
 
 @model Step3BViewModel;
 
-<form id="step3B" asp-controller="Home" asp-action="Step3B" method="post">
+<div class="form-page-wrap">
+    <div class="form-page-content">
+        <div>
+            <h3 class="calculator-title">
+                Child Maintenance Calculator
+            </h3>
+        </div>
+        <div class="form-page-header">
+            <div>
+                <h3 class="form-step-title">
+                    Step 3
+                </h3>
+            </div>
+        </div>
 
-    <label>How many nights per year does each child stay with the paying parent?</label>
-
-    @{
-        int childIndex = 0;
-        foreach (Step3BChild child in Model.Step3BChildren)
-        {
-            <div id="childNightsPerYearLower">
+        <form id="step3B" asp-controller="Home" asp-action="Step3B" method="post">
                 
-                <h2>@child.FirstName</h2>
-                <input asp-for="Step3BChildren[childIndex].Id" type="hidden" />
+            <div class="form-block">
+                <label>How many nights per year does each child stay with the paying parent?</label>
 
-                <label>
-                    <input asp-for="Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow" type="radio" value="<52" />
-                    Less than once per week
-                </label>
-                <br />
-                <label>
-                    <input asp-for="Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow" type="radio" value=">=52" />
-                    Once per week or more
-                </label>
+                @{
+                    int childIndex = 0;
+                    foreach (Step3BChild child in Model.Step3BChildren)
+                    {
+                        <div id="childNightsPerYearLower" class="form-block">
+                                
+                            <div class="form-field">
+                                <div>
+                                    <label class="receiving-parent-title">@child.FirstName</label>
+                                    <input asp-for="Step3BChildren[childIndex].Id" type="hidden"/>
+                                </div>
+                                
+                                <div>
+                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, "<52")
+                                    Less than once per week
+                                    <br />
+                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, ">=52")
+                                    Once per week or more
+                                </div>
+                            </div>
+                            
+                        </div>
 
+                          childIndex++;
+                    }
+                }
             </div>
 
-            childIndex++;
-        }
-    }
+            <button type="submit" class="form-next-button">Next</button>
 
-    <button type="submit">Next</button>
-
-</form>
+        </form>
+    </div>
+</div>

@@ -2,15 +2,40 @@
 
 @model Step3AViewModel;
 
-<form id="step3A" asp-controller="Home" asp-action="Step3A" method="post">
+<div class="form-page-wrap">
+    <div class="form-page-content">
+        
+        <div>
+            <h3 class="calculator-title">
+                Child Maintenance Calculator
+            </h3>
+        </div>
+        <div class="form-page-header">
+            <div>
+                <h3 class="form-step-title">
+                    Step 3
+                </h3>
+            </div>
+        </div>
 
-    <label>Paying parent's annual income</label>
-    <input asp-for="@Model.PayingParentAnnualIncome" />
-    <br />
+        <form id="step3A" asp-controller="Home" asp-action="Step3A" method="post">
 
-    <label>Paying parent's annual pension</label>
-    <input asp-for="@Model.PayingParentAnnualPension" />
+            <div class="form-block">
+                <label class="form-label">Paying parent's annual income</label>
+                <div>
+                    <input asp-for="@Model.PayingParentAnnualIncome" />
+                </div>
+            </div>
+            
+            <div class="form-block">
+                <label class="form-label">Paying parent's annual pension</label>
+                <div>
+                    <input asp-for="@Model.PayingParentAnnualPension" />
+                </div>
+            </div>
 
-    <button type="submit">Next</button>
+            <button type="submit" class="form-next-button">Next</button>
 
-</form>
+        </form>
+    </div>
+</div>

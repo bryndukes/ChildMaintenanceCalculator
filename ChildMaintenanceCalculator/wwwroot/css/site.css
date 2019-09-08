@@ -109,7 +109,7 @@
     margin-left: 20px !important;
 }
 
-input[type="text"] {
+input[type="text"],input[type="number"],.form-ddl {
     display: inline-block;
     height: 2.65em;
     margin-bottom: 9px;
@@ -123,6 +123,16 @@ input[type="text"] {
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
 }
 
+input[type="number"] {
+    width: 70px;
+}
+
+.mid-list-label {
+    font-weight: 700;
+    opacity: .6;
+    margin-left: 20px;
+}
+
 
 
 /* Hide/rearrange for smaller screens */
@@ -130,5 +140,6 @@ input[type="text"] {
     /* Hide captions */
     .carousel-caption {
         display: none;
+        
     }
 }

@@ -2,12 +2,35 @@
 
 @model Step5ViewModel;
 
-<form id="step5" asp-controller="Home" asp-action="Step5" method="post">
+<div class="form-page-wrap">
+    <div class="for-page-content">
 
-    <label>For how many other children does the paying parent or their partner receive child benefit?</label>
+        <div>
+            <h3 class="calculator-title">
+                Child Maintenance Calculator
+            </h3>
+        </div>
+        <div class="form-page-header">
+            <div>
+                <h3 class="form-step-title">
+                    Step 5
+                </h3>
+            </div>
+        </div>
+        
+        <form id="step5" asp-controller="Home" asp-action="Step5" method="post">
 
-    <input asp-for="OtherSupportedChildren" />
+            <div class="form-block">
+                <div class="form-field">
+                    <label>For how many other children does the paying parent or their partner receive child benefit?</label>
+                    <input asp-for="OtherSupportedChildren" />
+                </div>
+            </div>
 
-    <button type="submit">Next</button>
+            <button type="submit" class="form-next-button">Next</button>
 
-</form>
+        </form>
+
+    </div>
+</div>
+
