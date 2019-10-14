@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ChildMaintenanceCalculator.Services;
@@ -63,6 +64,12 @@ namespace ChildMaintenanceCalculator
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            var cultureInfo = new CultureInfo("en-US");
+            cultureInfo.NumberFormat.CurrencySymbol = "£";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
     }
 }

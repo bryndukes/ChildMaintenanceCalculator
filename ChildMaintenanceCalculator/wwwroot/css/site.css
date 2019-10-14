@@ -48,7 +48,7 @@
 }
 
 .form-step-subinstruction {
-    
+    margin-bottom: 20px;
 }
 
 .form-block {
@@ -133,7 +133,30 @@ input[type="number"] {
     margin-left: 20px;
 }
 
+.result-section-header {
+    font-size: 19px;
+    line-height: 1.7;
+    font-weight: 600;
+    opacity: .6;
+}
 
+.hidden-field {
+    display: none !important;
+}
+
+.horizontal-field {
+    display: inline-block;
+    margin: 0 20px 0 0 !important;
+}
+
+.result-money {
+    color: #f7941d;
+}
+
+.result-subtext {
+    line-height: 1;
+    font-size: 14px;
+}
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {

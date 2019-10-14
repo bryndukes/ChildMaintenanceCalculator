@@ -21,23 +21,25 @@
                 <input asp-for="Id" type="hidden" value="@childId" />
             </div>
             
-            <div class="form-field">
-                <label class="form-label">What is the child's first name?</label>
+            <div class="form-field horizontal-field">
+                <label class="form-label">First name</label>
                 <div>
                     <input asp-for="FirstName" />
                 </div>
             </div>
 
-            <div class="form-field">
-                <label class="form-label">Are there any pre-existing arrangements for this child?</label>
+            <div class="form-field horizontal-field">
+                <label class="form-label">Pre-existing arrangements</label>
                 <div>
-                    <input asp-for="PreExistingArrangements" />
+                    @Html.RadioButtonFor(m => m.PreExistingArrangements, true, new{ OnChange = "preExistingArrangementsChanged(true);"}) Yes
+                    @Html.RadioButtonFor(m => m.PreExistingArrangements, false, new {@checked = "checked", OnChange = "preExistingArrangementsChanged(false);"}) No
                 </div>
             </div>
+            <!--TODO:Add a What DOes This mean help thing for pre-existing arrangenents-->
             
-            <!--TODO: Make this conditionally visible dependinh on checkbox above-->
-            <div class="form-field">
-                <label class="form-label">How much is paid per week is paid to the receiving parent for this child?</label>
+            <!--TODO: Make this conditionally visible dependin on checkbox above-->
+            <div class="form-field hidden-field horizontal-field" id="preexistingArrangementsAmount">
+                <label class="form-label">Pre-existing arrangements amount</label>
                 <div>
                     <input asp-for="PreExisingArrangementsAmount" />
                 </div>
@@ -47,3 +49,14 @@
         </div>
     }
 }
+
+<script>
+    //TODO: Make this work
+    function preExistingArrangementsChanged(arr) {
+        if (arr) {
+            $("#preexistingArrangementsAmount")[0].classList.remove("hidden-field");
+        } else {
+            $("#preexistingArrangementsAmount")[0].classList.add("hidden-field");
+        }
+    };
+</script>

@@ -1,25 +1,71 @@
-﻿@model Calculation;
+﻿@using System.Globalization
+@model Calculation;
 
-@{
-    <h2>Rate:</h2>
-    <label>@Model.RateBand</label>
-    <br />
-    <h2>Total:</h2>
-    <label>@Model.TotalMaintenancePayable</label>
-    <br />
-    foreach (var receivingParent in Model.PayingParent.ReceivingParents)
+<!--TODO: Make this user friendly (add explanation page)-->
+@*<div class="form-block">
+        <label>Rate:</label>
+        <label>@Model.RateBand</label>
+    </div>*@
+
+<div class="form-block">
+    <label class="result-section-header">Total</label>
+    <div>
+        <span class="result-label">Total child maintenance payable per week</span>
+        <label class="result-money">@Model.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label>
+    </div>
+
+</div>
+
+<hr/>
+
+<div class="form-block">
+    
+    <label class="result-section-header">Breakdown</label>
+    
+    @foreach (var receivingParent in Model.PayingParent.ReceivingParents)
     {
-        <h2>@receivingParent.FirstName</h2>
-        <h3>Total entitlement:</h3>
-        <label>@receivingParent.MaintenanceEntitlementAmount</label>
+        <div class="form-field">
+            <label class="receiving-parent-title">@receivingParent.FirstName</label>
+            <br/>
+            <span class="result-label">Total child maintenance to be paid to @receivingParent.FirstName per week</span>
+            <label class="result-money">@receivingParent.MaintenanceEntitlementAmount.ToString("C", CultureInfo.CurrentCulture)</label>
 
-        foreach (var child in receivingParent.Children)
-        {
-            <h4>@child.FirstName</h4>
-            <label>@child.ChildMaintenanceAmount</label>
+            @foreach (var child in receivingParent.Children)
+            {
+        <div>
+            <span class="result-label">Amount to be paid for @child.FirstName</span>
+            <label class="result-money">@child.ChildMaintenanceAmount.ToString("C", CultureInfo.CurrentCulture)</label>
             <br />
-        }
-        <br />
+            @if (child.PreExistingMaintenanceArrangements)
+            {
+                <div class="add-child-div">
+
+                    <span class="result-subtext">Pre-existing arrangements</span>
+                    <label class="result-subtext">@child.PreExistingMaintenanceArrangementsAmount.ToString("C", CultureInfo.CurrentCulture)</label>
+                    <br />
+                    <span class="result-subtext">Remainder to pay</span>
+
+
+                    @{
+                        var remainder = child.ChildMaintenanceAmount - child.PreExistingMaintenanceArrangementsAmount;
+
+                        if (remainder <= 0)
+                        {
+                            <label class="result-subtext">£0.00</label>
+                        }
+                        else
+                        {
+                            <label class="result-subtext">@remainder.ToString("C", CultureInfo.CurrentCulture)</label>
+                        }
+                    }
+                </div>
+            }
+
+        </div>
+                
+            }
+        </div>
     }
-    <br />
-}
+</div>
+
+<hr/>
