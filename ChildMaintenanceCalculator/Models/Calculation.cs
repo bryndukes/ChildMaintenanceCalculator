@@ -14,7 +14,7 @@ namespace ChildMaintenanceCalculator.Models
 
         public User User = new User();
 
-        public string RateBand { get; set; } //Should this be a class/Enum
+        public string RateBand { get; set; } //TODO:Should this be a class/Enum?
 
         private decimal totalMaintenancePayable;
         public decimal TotalMaintenancePayable
@@ -43,7 +43,7 @@ namespace ChildMaintenanceCalculator.Models
                 //Calculate Total For Each Child - Including Reductions
                 foreach(var receivingParent in PayingParent.ReceivingParents)
                 {
-                    if (receivingParent.Children.Where(c => c.NightsPayingParentCaresForChildPerYearLow == ">=52").Any())
+                    if (receivingParent.Children.Any(c => c.NightsPayingParentCaresForChildPerYearLow == Child.SharedCare.MoreThanOrEqualTo52))
                     {
                         foreach(var child in receivingParent.Children) //TODO: Linq this
                         {
@@ -59,27 +59,25 @@ namespace ChildMaintenanceCalculator.Models
                     }
                 }
 
-                return;
+            }
+            else if (PayingParent.GrossWeeklyIncome < 7)
+            {
+                //Nil Rate
+                RateBand = "Nil";
+            }
+            else if (PayingParent.GrossWeeklyIncome >= 7 && PayingParent.GrossWeeklyIncome <= 100)
+            {
+                //Flat Rate
+                RateBand = "F1";
+                foreach (var child in PayingParent.ReceivingParents.SelectMany(p => p.Children))
+                {
+                    child.ChildMaintenanceAmount = decimal.Divide(7, PayingParent.ReceivingParents.SelectMany(p => p.Children).Count());
+                }
             }
             else
             {
-                if(PayingParent.GrossWeeklyIncome < 7)
-                {
-                    //Nil Rate
-                    RateBand = "Nil";
-                    return; //TODO: Is this good?
-                }
-                else if(PayingParent.GrossWeeklyIncome >= 7 && PayingParent.GrossWeeklyIncome <= 100)
-                {
-                    //Flat Rate
-                    RateBand = "F1";
-                    foreach (var child in PayingParent.ReceivingParents.SelectMany(p => p.Children))
-                    {
-                        child.ChildMaintenanceAmount = decimal.Divide(7, PayingParent.ReceivingParents.SelectMany(p => p.Children).Count());
-                    }
-                    return;
-                }
-                else if(PayingParent.GrossWeeklyIncome > 100 && PayingParent.GrossWeeklyIncome < 200)
+                //Reduced, Basic and Basic Plus rate calculation
+                if(PayingParent.GrossWeeklyIncome > 100 && PayingParent.GrossWeeklyIncome < 200)
                 {
                     //Reduced Rate
                     if (totalChildren ==1)
@@ -219,38 +217,36 @@ namespace ChildMaintenanceCalculator.Models
 
                 }
 
+                //Calculate Maintenance Amount Per Child
+                foreach (var child in PayingParent.ReceivingParents.SelectMany(p => p.Children))
+                {
+                    child.ChildMaintenanceAmount = TotalMaintenancePayable / totalChildren;
+                }
+
+                //Calculate shared care reductions (for Reduced, Basic and Basic Plus Rates)
+                foreach (var child in PayingParent.ReceivingParents.SelectMany(p => p.Children))
+                {
+                    if (child.NightsPayingParentCaresForChildPerYearHigh == Child.SharedCare.From52To103)
+                    {
+                        child.ChildMaintenanceAmount = child.ChildMaintenanceAmount - (decimal.Divide(child.ChildMaintenanceAmount, 7));
+                    }
+                    else if (child.NightsPayingParentCaresForChildPerYearHigh == Child.SharedCare.From104To155)
+                    {
+                        child.ChildMaintenanceAmount = child.ChildMaintenanceAmount - decimal.Multiply(2, (decimal.Divide(child.ChildMaintenanceAmount, 7)));
+                    }
+                    else if (child.NightsPayingParentCaresForChildPerYearHigh == Child.SharedCare.From156To174)
+                    {
+                        child.ChildMaintenanceAmount = child.ChildMaintenanceAmount - decimal.Multiply(3, (decimal.Divide(child.ChildMaintenanceAmount, 7)));
+                    }
+                    else if (child.NightsPayingParentCaresForChildPerYearHigh == Child.SharedCare.MoreThan175)
+                    {
+                        child.ChildMaintenanceAmount = child.ChildMaintenanceAmount - (decimal.Multiply(child.ChildMaintenanceAmount, 0.50m) - 7);
+                    }
+                }
             }
 
-            //Calculate Maintenance Amount Per Child
-            foreach (var child in PayingParent.ReceivingParents.SelectMany(p => p.Children))
-            {
-                child.ChildMaintenanceAmount = TotalMaintenancePayable / totalChildren;
-            }
-
-            //Calculate shared care reductions (for Reduced, Basic and Basic Plus Rates)
-            foreach (var child in PayingParent.ReceivingParents.SelectMany(p=> p.Children))
-            {
-                if(child.NightsPayingParentCaresForChildPerYearHigh == "52-103")
-                {
-                    child.ChildMaintenanceAmount = child.ChildMaintenanceAmount - (decimal.Divide(child.ChildMaintenanceAmount, 7));
-                }
-                else if (child.NightsPayingParentCaresForChildPerYearHigh == "104-155")
-                {
-                    child.ChildMaintenanceAmount = child.ChildMaintenanceAmount - decimal.Multiply(2,(decimal.Divide(child.ChildMaintenanceAmount, 7)));
-                }
-                else if (child.NightsPayingParentCaresForChildPerYearHigh == "156-174")
-                {
-                    child.ChildMaintenanceAmount = child.ChildMaintenanceAmount - decimal.Multiply(3, (decimal.Divide(child.ChildMaintenanceAmount, 7)));
-                }
-                else if (child.NightsPayingParentCaresForChildPerYearHigh == "175>")
-                {
-                    child.ChildMaintenanceAmount = child.ChildMaintenanceAmount - (decimal.Multiply(child.ChildMaintenanceAmount, 0.50m) - 7);
-                }
-            }
-
-            //RecaclculateTotal
+            //RecalculateTotal
             TotalMaintenancePayable = PayingParent.ReceivingParents.SelectMany(p => p.Children).Sum(c => c.ChildMaintenanceAmount);
-
 
         }
 

@@ -14,9 +14,9 @@ namespace ChildMaintenanceCalculator.Models
 
         public string NameOfReceivingParent { get; set; }
 
-        public string NightsPayingParentCaresForChildPerYearLow { get; set; }
+        public SharedCare NightsPayingParentCaresForChildPerYearLow { get; set; }
 
-        public string NightsPayingParentCaresForChildPerYearHigh { get; set; }
+        public SharedCare NightsPayingParentCaresForChildPerYearHigh { get; set; }
 
         public bool PreExistingMaintenanceArrangements { get; set; }
 
@@ -32,6 +32,17 @@ namespace ChildMaintenanceCalculator.Models
         }
 
         //Need to add a final child amount after deductions?
+
+        public enum SharedCare
+        {
+            LessThan52 = 1,
+            MoreThanOrEqualTo52 = 2,
+            From52To103 = 3,
+            From104To155 = 4,
+            From156To174 = 5,
+            MoreThan175 = 6
+        }
+
     }
 
 }

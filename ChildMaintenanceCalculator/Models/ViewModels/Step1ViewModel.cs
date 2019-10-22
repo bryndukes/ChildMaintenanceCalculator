@@ -9,6 +9,7 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
     {
         public Step1ViewModel()
         {
+            //TODO: Fix this it isn't adding a parent
             Step1ReceivingParents = new List<Step1ReceivingParent>();
             Step1ReceivingParents.Add(new Step1ReceivingParent());
         }

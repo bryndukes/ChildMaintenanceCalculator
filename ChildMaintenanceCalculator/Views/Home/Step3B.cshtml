@@ -35,10 +35,10 @@
                                 </div>
                                 
                                 <div>
-                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, "<52")
+                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, Child.SharedCare.LessThan52)
                                     Less than once per week
                                     <br />
-                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, ">=52")
+                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, Child.SharedCare.MoreThanOrEqualTo52)
                                     Once per week or more
                                 </div>
                             </div>

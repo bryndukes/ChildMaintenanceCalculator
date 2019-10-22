@@ -29,10 +29,9 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
         {
             Id = id;
             FirstName = fName;
-            NightsPayingParentCaresForChildPerYearHigh = string.Empty;
         }
         public int Id { get; set; }
         public string FirstName { get; set; }
-        public string NightsPayingParentCaresForChildPerYearHigh { get; set; }
+        public Child.SharedCare NightsPayingParentCaresForChildPerYearHigh { get; set; }
     }
 }

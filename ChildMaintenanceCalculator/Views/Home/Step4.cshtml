@@ -42,11 +42,11 @@
 
                                 <div>
                                     <select asp-for="Step4Children[childIndex].NightsPayingParentCaresForChildPerYearHigh" class="form-ddl">
-                                        <option value="<52">Less than 52 (less than once a week)</option>
-                                        <option value="52-103">52 - 103 (approximately once a week)</option>
-                                        <option value="104-155">104 - 155 (approximately twice a week)</option>
-                                        <option value="156-174">156 - 174 (approximately three times a week)</option>
-                                        <option value=">175">More than 175 (more than three times a week)</option>
+                                        <option value=@Child.SharedCare.LessThan52>Less than 52 (less than once a week)</option>
+                                        <option value=@Child.SharedCare.From52To103>52 - 103 (approximately once a week)</option>
+                                        <option value=@Child.SharedCare.From104To155>104 - 155 (approximately twice a week)</option>
+                                        <option value=@Child.SharedCare.From156To174>156 - 174 (approximately three times a week)</option>
+                                        <option value=@Child.SharedCare.MoreThan175>More than 175 (more than three times a week)</option>
                                     </select>
                                 </div>
                             </div>
