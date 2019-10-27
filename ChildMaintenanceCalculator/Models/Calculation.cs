@@ -154,7 +154,7 @@ namespace ChildMaintenanceCalculator.Models
                 }
                 else
                 {
-                    //Calculate Reduced Income
+                    //Calculate income reductions
                     if(PayingParent.OtherSupportedChildren == 0)
                     {
                         PayingParent.ReducedWeeklyIncome = PayingParent.GrossWeeklyIncome;
@@ -191,7 +191,7 @@ namespace ChildMaintenanceCalculator.Models
                             CalculateMaintenanceAmountBasic(19);
                         }
                     }
-                    else if(PayingParent.GrossWeeklyIncome >800 && PayingParent.GrossWeeklyIncome <= 3000)
+                    else if(PayingParent.GrossWeeklyIncome >800)
                     {
                         //Basic Plus Rate
                         if (totalChildren == 1)
@@ -210,10 +210,8 @@ namespace ChildMaintenanceCalculator.Models
                             CalculateMaintenanceAmountBasicPlus(19, 15);
                         }
                     }
-                    else
-                    {
-                        RateBand = "Over"; //TODO: Think about how we're gonna handle this
-                    }
+                    
+                    //TODO: Decide if we should handle the over £3000 scenario someehow?
 
                 }
 
@@ -261,8 +259,13 @@ namespace ChildMaintenanceCalculator.Models
             }
             else
             {
-                decimal lowerThresholdAmount = decimal.Multiply(8, lowerThresholdPercentage);
-                decimal upperThresholdAmount = decimal.Multiply(decimal.Divide((PayingParent.ReducedWeeklyIncome - 800), 100), upperThresholdPercentage);
+                decimal upperThresholdAmount = 0;
+
+                decimal lowerThresholdAmount = decimal.Multiply(PayingParent.ReducedWeeklyIncome < 800 ? (PayingParent.ReducedWeeklyIncome / 100) : 8, lowerThresholdPercentage);
+
+                if (PayingParent.ReducedWeeklyIncome > 800)
+                    upperThresholdAmount = decimal.Multiply(decimal.Divide((PayingParent.ReducedWeeklyIncome - 800), 100), upperThresholdPercentage);
+
                 TotalMaintenancePayable = lowerThresholdAmount + upperThresholdAmount;
             }
 
@@ -270,19 +273,19 @@ namespace ChildMaintenanceCalculator.Models
 
         private void CalculateMaintenanceAmountBasic(decimal percentage)
         {
-            TotalMaintenancePayable = decimal.Multiply(decimal.Divide(PayingParent.GrossWeeklyIncome, 100), percentage);
+            TotalMaintenancePayable = decimal.Multiply(decimal.Divide(PayingParent.ReducedWeeklyIncome, 100), percentage);
         }
 
         private void CalculateMaintenanceAmountReduced(decimal percentage)
         {
-            TotalMaintenancePayable = decimal.Multiply(decimal.Divide((PayingParent.ReducedWeeklyIncome - 100), 100), percentage) + 7;
+            TotalMaintenancePayable = decimal.Multiply(decimal.Divide((PayingParent.GrossWeeklyIncome - 100), 100), percentage) + 7;
         }
 
         //Should there be a separate method for calculating the actual amounts for each child and this one is just for calculating the rate, or have it all in one.
 
         private void CalculateReducedIncome(decimal reduction)
         {
-            PayingParent.ReducedWeeklyIncome = decimal.Multiply(PayingParent.ReducedWeeklyIncome, decimal.Divide((100 - reduction), 100)); 
+            PayingParent.ReducedWeeklyIncome = decimal.Multiply(PayingParent.GrossWeeklyIncome, decimal.Divide((100 - reduction), 100)); 
         }
 
     }

@@ -16,7 +16,7 @@ namespace ChildMaintenanceCalculator.Models
 
         public decimal MaintenanceEntitlementAmount
         {
-            get { return Math.Round(Children.Sum(c => c.ChildMaintenanceAmount), 2); }
+            get { return Children.Sum(c => c.ChildMaintenanceAmount); }
         }
     }
 }

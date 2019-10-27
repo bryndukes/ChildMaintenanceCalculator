@@ -26,7 +26,7 @@ namespace ChildMaintenanceCalculator.Models
         private decimal childMaintenanceAmount;
         public decimal ChildMaintenanceAmount
         {
-            get { return Math.Round(childMaintenanceAmount, 2); }
+            get { return childMaintenanceAmount; }
 
             set { childMaintenanceAmount = value; }
         }
