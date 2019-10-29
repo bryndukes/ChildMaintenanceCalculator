@@ -31,14 +31,14 @@
             <div class="form-field horizontal-field">
                 <label class="form-label">Pre-existing arrangements</label>
                 <div>
-                    @Html.RadioButtonFor(m => m.PreExistingArrangements, true, new{ OnChange = "preExistingArrangementsChanged(true);"}) Yes
-                    @Html.RadioButtonFor(m => m.PreExistingArrangements, false, new {@checked = "checked", OnChange = "preExistingArrangementsChanged(false);"}) No
+                    @Html.RadioButtonFor(m => m.PreExistingArrangements, true, new{ OnChange = $"preExistingArrangementsChanged(true, {childId})" }) Yes
+                    @Html.RadioButtonFor(m => m.PreExistingArrangements, false, new {@checked = "checked", OnChange = $"preExistingArrangementsChanged(false, {childId});" }) No
                 </div>
             </div>
             <!--TODO:Add a What DOes This mean help thing for pre-existing arrangenents-->
             
             <!--TODO: Make this conditionally visible dependin on checkbox above-->
-            <div class="form-field hidden-field horizontal-field" id="preexistingArrangementsAmount">
+            <div class="form-field hidden-field horizontal-field" id="@($"preexistingArrangementsAmount{childId}")">
                 <label class="form-label">Pre-existing arrangements amount</label>
                 <div>
                     <input asp-for="PreExisingArrangementsAmount" />
@@ -49,14 +49,3 @@
         </div>
     }
 }
-
-<script>
-    //TODO: Make this work
-    function preExistingArrangementsChanged(arr) {
-        if (arr) {
-            $("#preexistingArrangementsAmount")[0].classList.remove("hidden-field");
-        } else {
-            $("#preexistingArrangementsAmount")[0].classList.add("hidden-field");
-        }
-    };
-</script>

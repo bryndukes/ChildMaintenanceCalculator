@@ -99,7 +99,7 @@
                         console.log("Hit" + buttonClickedParentId);
                         var targetParent = "addChildrenList" + buttonClickedParentId;
                         var parentHtmlFieldPrefix = evt.target.getAttribute("data-htmlfieldprefix");
-                        var newChildIndex = $(".addChildDiv").length;
+                        var newChildIndex = $(".add-child-div").length;
                         $.ajax({
                             type: "POST",
                             url: "Step1AddNewChild/?index=" + newChildIndex + "&parentHtmlFieldPrefix=" + parentHtmlFieldPrefix,
@@ -113,6 +113,16 @@
                     });
 
                 });
+            </script>
+            
+            <script>
+                function preExistingArrangementsChanged(arr, childId) {
+                    if (arr) {
+                        $("#preexistingArrangementsAmount" + childId)[0].classList.remove("hidden-field");
+                    } else {
+                        $("#preexistingArrangementsAmount" + childId)[0].classList.add("hidden-field");
+                    }
+                };
             </script>
 
         </div>
