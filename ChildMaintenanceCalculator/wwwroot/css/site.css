@@ -1,6 +1,11 @@
 ﻿
 /*TODO: Convert all sizes to px*/
 
+.content-desktop {display: block;}
+.content-mobile {display: none;}
+.content-desktop-inline {display: inline-block;}
+.content-mobile-inline {display: none;}
+
 .custom-body {
     padding-top: 50px;
     padding-bottom: 20px;
@@ -158,11 +163,43 @@ input[type="number"] {
     font-size: 14px;
 }
 
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
+.result-submoney {
+    line-height: 1;
+    font-size: 14px;
+    opacity: .6;
+}
+
+.result-subsection {
+    margin-bottom: 0.7em;
+}
+
+.result-column-one {
+    width: 40%;
+}
+.result-column-two {
+    width: 60%;
+}
+
+@media screen and (max-width: 768px) {
+
+    .content-desktop {
         display: none;
-        
     }
+
+    .content-mobile {
+        display: block;
+    }
+
+    .content-desktop-inline {
+        display: none;
+    }
+
+    .content-mobile-inline {
+        display: inline-block;
+    }
+
+    result-column-one {
+        width: 100%;
+    }
+
 }
