@@ -269,11 +269,13 @@ namespace ChildMaintenanceCalculator.Controllers
             var model = this.PeekModel();
             var contextAccessor = new ActionContextAccessor();
             contextAccessor.ActionContext = ControllerContext;
-            var emailBody = await viewRenderService.RenderToStringAsync("_ResultPartial", contextAccessor, model);
+            var emailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, model);
+            //TODO: Error Handling
 
             emailSenderService.SendEmail(emailBody, emailAddress);
 
             //TODO: This needs to actually return a success flag so the user can know if the email was sent?
+            
 
         }
 

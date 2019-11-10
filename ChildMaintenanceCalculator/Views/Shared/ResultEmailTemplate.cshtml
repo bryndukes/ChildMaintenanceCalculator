@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style scoped>
+        @Html.Partial("_ResultEmailTemplateStylePartial");
+    </style>
+       
+
+</head>
+<body>
+    @using System.Globalization
+    @model Calculation;
+
+    <!--TODO: Make this user friendly (add explanation page)-->
+    @*<div class="form-block">
+            <label>Rate:</label>
+            <label>@Model.RateBand</label>
+        </div>*@
+
+    <div class="form-block">
+        <label class="result-section-header">Total</label>
+        @*<div>
+                <span class="result-label">Total child maintenance payable per week</span>
+                <label class="result-money">@Model.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label>
+            </div>*@
+
+        <table id="total-result-table" style="width: 100%">
+            <colgroup>
+                <col span="1" class="result-column-one">
+                <col span="1" class="result-column-two">
+            </colgroup>
+            <tr>
+                <td>
+                    <span class="result-label">Total child maintenance payable per week</span>
+                    <label class="result-money content-mobile-inline">@Model.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label>
+                </td>
+                <td class="content-desktop"><label class="result-money content-desktop">@Model.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label></td>
+            </tr>
+        </table>
+
+    </div>
+
+    <hr />
+
+    <div class="form-block">
+
+        <label class="result-section-header">Breakdown</label>
+
+        @foreach (var receivingParent in Model.PayingParent.ReceivingParents)
+        {
+            <div class="form-field">
+
+                <label class="receiving-parent-title">@receivingParent.FirstName</label>
+                <br />
+
+                <div class="result-subsection">
+                    <table id="parent-result-table" style="width: 100%">
+                        <colgroup>
+                            <col span="1" class="result-column-one">
+                            <col span="1" class="result-column-two">
+                        </colgroup>
+                        <tr>
+                            <td>
+                                <span class="result-label">Total child maintenance to be paid to @receivingParent.FirstName per week</span>
+                                <label class="result-money content-mobile-inline">@receivingParent.MaintenanceEntitlementAmount.ToString("C", CultureInfo.CurrentCulture)</label>
+                            </td>
+                            <td class="content-desktop"><label class="result-money content-desktop">@receivingParent.MaintenanceEntitlementAmount.ToString("C", CultureInfo.CurrentCulture)</label></td>
+                        </tr>
+                    </table>
+                </div>
+
+                @foreach (var child in receivingParent.Children)
+                {
+                    var remainder = child.ChildMaintenanceAmount - child.PreExistingMaintenanceArrangementsAmount;
+
+                    <div class="result-subsection">
+
+                        <table id="child-result-table" style="width: 100%">
+                            <colgroup>
+                                <col span="1" class="result-column-one">
+                                <col span="1" class="result-column-two">
+                            </colgroup>
+                            <tr>
+                                <td>
+                                    <span class="result-label">Of which is for @child.FirstName</span>
+                                    <label class="result-money content-mobile-inline">@child.ChildMaintenanceAmount.ToString("C", CultureInfo.CurrentCulture)</label>
+                                </td>
+                                <td class="content-desktop"><label class="result-money content-desktop">@child.ChildMaintenanceAmount.ToString("C", CultureInfo.CurrentCulture)</label></td>
+                            </tr>
+                        </table>
+
+                        @if (child.PreExistingMaintenanceArrangements)
+                        {
+                            <div>
+
+                                <table id="preexisting-arrangements-result-table" style="width: 100%">
+                                    <colgroup>
+                                        <col span="1" class="result-column-one">
+                                        <col span="1" class="result-column-two">
+                                    </colgroup>
+                                    <tr>
+                                        <td>
+                                            <span class="result-subtext">&nbsp;&nbsp;Pre-existing arrangements</span>
+                                            <label class="result-submoney content-mobile-inline">@child.PreExistingMaintenanceArrangementsAmount.ToString("C", CultureInfo.CurrentCulture)</label>
+                                        </td>
+                                        <td class="content-desktop"><label class="result-submoney content-desktop">@child.PreExistingMaintenanceArrangementsAmount.ToString("C", CultureInfo.CurrentCulture)</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="result-subtext">&nbsp;&nbsp;Remainder to pay</span>
+                                            @{
+                                                if (remainder <= 0)
+                                                {
+                                                    <label class="content-mobile-inline result-submoney">£0.00</label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="content-mobile-inline result-submoney">@remainder.ToString("C", CultureInfo.CurrentCulture)</label>
+                                                }
+                                            }
+                                        </td>
+                                        <td class="content-desktop">
+                                            <!--ToDO: Dry this out-->
+                                            @{
+                                                if (remainder <= 0)
+                                                {
+                                                    <label class="content-desktop result-submoney">£0.00</label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="content-desktop result-submoney">@remainder.ToString("C", CultureInfo.CurrentCulture)</label>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        }
+
+                    </div>
+
+                }
+            </div>
+        }
+    </div>
+
+    <hr />
+
+</body>
+</html>
