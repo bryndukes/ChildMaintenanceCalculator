@@ -14,18 +14,19 @@
     @using System.Globalization
     @model Calculation;
 
-    <!--TODO: Make this user friendly (add explanation page)-->
-    @*<div class="form-block">
-            <label>Rate:</label>
-            <label>@Model.RateBand</label>
-        </div>*@
+<!--TODO: Config the message content-->
+<div>
+    <p>
+        Hi,<br/>
+        <br/>
+        Thank you for using the Child Maintenance Calculator.<br/>
+        Please find your calculation results below.<br/>
+    </p>
+</div>
+<br/>
 
     <div class="form-block">
         <label class="result-section-header">Total</label>
-        @*<div>
-                <span class="result-label">Total child maintenance payable per week</span>
-                <label class="result-money">@Model.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label>
-            </div>*@
 
         <table id="total-result-table" style="width: 100%">
             <colgroup>
@@ -149,6 +150,19 @@
     </div>
 
     <hr />
-
+    
+    
+<div>
+    <p>
+        The calculator uses the Child Maintenance Services gross income formula (replacing the previous net income model used by the CSA). I really hope it helps in the discussions about the appropriate level of child maintenance.<br/>
+        <br/>
+        Feel free to use the calculator again if any circumstances change. It can be found here LINK TBA. <br/>
+        <br/>
+        Regards,<br/>
+        <br/>
+        Alan Larkin<br/>
+        <strong>Head of Innovation & Technology, Family Law Partners</strong>
+    </p>
+</div>
 </body>
 </html>
