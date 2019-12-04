@@ -96,7 +96,6 @@
                     $(document).on('click', ".addChildButton", function (evt) {
                         event.preventDefault();
                         var buttonClickedParentId = evt.target.getAttribute("data-addchildbtnid");
-                        console.log("Hit" + buttonClickedParentId);
                         var targetParent = "addChildrenList" + buttonClickedParentId;
                         var parentHtmlFieldPrefix = evt.target.getAttribute("data-htmlfieldprefix");
                         var newChildIndex = $(".add-child-div").length;
@@ -106,10 +105,21 @@
                             success: function (html) {
                                 $("#" + targetParent).append(html);
                             },
-                            error: function (jqHXR, textStatus, errorThrown) {
+                            error: function (textStatus) {
                                 alert("Could not add new item: " + textStatus);
                             }
                         });
+                    });
+
+                });
+
+                $(document).ready(function () {
+
+                    $(document).on('click', ".removeChildButton", function (evt) {
+                        event.preventDefault();
+                        var childDivId = $(this).closest(".add-child-div").attr('id');
+                        var targetChild = $("#" + childDivId);
+                        $(targetChild).slideUp("normal", function() { $(this).remove(); } );
                     });
 
                 });

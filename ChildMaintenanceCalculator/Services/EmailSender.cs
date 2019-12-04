@@ -28,12 +28,10 @@ namespace ChildMaintenanceCalculator.Services
             using (var mailMessage = new MailMessage())
             using (var client = new SmtpClient(smtpServer, smtpPort))
             {
-                // configure the client and send the message
                 client.UseDefaultCredentials = false;
                 client.Credentials = new NetworkCredential(smtpUser, smtpPassword);
                 client.EnableSsl = true;
 
-                // configure the mail message
                 mailMessage.From = new MailAddress(emailFrom);
                 mailMessage.To.Insert(0, new MailAddress(emailTo));
                 mailMessage.Subject = emailSubject;

@@ -11,41 +11,50 @@
 }
 
 @{
-    using (Html.BeginCollectionItem(collectionNamePrefix + "Step1Children"))
-    {
-        <div id="@($"addChild{childId}")" class="add-child-div form-block">
-            <!--TODO: Give this a dynamic index based ID-->
-            
+
+    <div id="@($"addChild{childId}")" class="add-child-div form-block">
+        <!--TODO: Give this a dynamic index based ID-->
+        
+        @using (Html.BeginCollectionItem(collectionNamePrefix + "Step1Children"))
+        {
             <div>
                 <label class="child-title">Child @(childId)</label>
-                <input asp-for="Id" type="hidden" value="@childId" />
-            </div>
-            
-            <div class="form-field horizontal-field">
-                <label class="form-label">First name</label>
-                <div>
-                    <input asp-for="FirstName" />
-                </div>
+                <input asp-for="Id" type="hidden" value="@childId"/>
             </div>
 
-            <div class="form-field horizontal-field">
-                <label class="form-label">Pre-existing arrangements</label>
-                <div>
-                    @Html.RadioButtonFor(m => m.PreExistingArrangements, true, new{ OnChange = $"preExistingArrangementsChanged(true, {childId})" }) Yes
-                    @Html.RadioButtonFor(m => m.PreExistingArrangements, false, new {@checked = "checked", OnChange = $"preExistingArrangementsChanged(false, {childId});" }) No
+            <div class="form-horizontal-row">
+
+                <div class="form-field horizontal-field">
+                    <label class="form-label">First name</label>
+                    <div>
+                        <input asp-for="FirstName"/>
+                    </div>
+                </div>
+
+                <div class="form-field horizontal-field">
+                    <label class="form-label">Pre-existing arrangements</label>
+                    <div>
+                        @Html.RadioButtonFor(m => m.PreExistingArrangements, true, new {OnChange = $"preExistingArrangementsChanged(true, {childId})"}) Yes
+                        @Html.RadioButtonFor(m => m.PreExistingArrangements, false, new {@checked = "checked", OnChange = $"preExistingArrangementsChanged(false, {childId});"}) No
+                    </div>
+                </div>
+                <!--TODO:Add a What DOes This mean help thing for pre-existing arrangenents-->
+
+                <!--TODO: Make this conditionally visible dependin on checkbox above-->
+                <div class="form-field hidden-field horizontal-field" id="@($"preexistingArrangementsAmount{childId}")">
+                    <label class="form-label">Pre-existing arrangements amount</label>
+                    <div>
+                        <input asp-for="PreExisingArrangementsAmount"/>
+                    </div>
+                </div>
+
+                <div class="remove-button-div horizontal-field">
+                    <button type="button" id="removeChildButton" class="removeChildButton remove-child-button" data-removechildbtnid="@childId" data-htmlfieldprefix="@parentHtmlFieldPrefix">
+                        <i class="fa fa-trash"></i>
+                    </button>
                 </div>
             </div>
-            <!--TODO:Add a What DOes This mean help thing for pre-existing arrangenents-->
-            
-            <!--TODO: Make this conditionally visible dependin on checkbox above-->
-            <div class="form-field hidden-field horizontal-field" id="@($"preexistingArrangementsAmount{childId}")">
-                <label class="form-label">Pre-existing arrangements amount</label>
-                <div>
-                    <input asp-for="PreExisingArrangementsAmount" />
-                </div>
-            </div>
-
-
-        </div>
-    }
+        }
+    </div>
+    
 }

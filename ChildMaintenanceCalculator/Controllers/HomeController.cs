@@ -33,6 +33,8 @@ namespace ChildMaintenanceCalculator.Controllers
             return View();
         }
 
+        //TODO: Remove comments from here, but add proper API comments
+
         //Step 1 - Add receiving parents and children
         [HttpGet]
         public IActionResult Step1()
@@ -103,6 +105,7 @@ namespace ChildMaintenanceCalculator.Controllers
             //Return partial to be appended to view
             return PartialView("_AddChildPartial", newChild);
         }
+
 
         //Step 2 - Does the paying parent receive a relevant benefit
         [HttpGet]
