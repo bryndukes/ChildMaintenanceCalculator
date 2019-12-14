@@ -24,6 +24,7 @@ namespace ChildMaintenanceCalculator.Models
         
         //Before Deduction of Pre-existing Arrangements
         private decimal childMaintenanceAmount;
+
         public decimal ChildMaintenanceAmount
         {
             get { return childMaintenanceAmount; }

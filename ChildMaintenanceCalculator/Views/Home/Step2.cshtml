@@ -24,38 +24,44 @@
                 <div class="form-field">
                     <label class="form-label">
                         Does the paying parent receive one of the following benefits?
-                    </label>
-                    <div>
-                        <ul>
-                            <li>Income Support</li>
-                            <li>Income-based Jobseeker's Allowance</li>
-                            <li>Income-related Employment and Support Allowance</li>
-                            <li>Pension Credit</li>
-                            <li>Contribution-based Jobseeker's Allowance</li>
-                            <li>Contribution-based Employment and Support</li>
-                            <li>State Pension</li>
-                            <li>Incapacity Benefit</li>
-                            <li>Training Allowance</li>
-                            <li>Armed Forces Compensation Scheme Payments</li>
-                            <li>War Disablement Pension</li>
-                            <li>Bereavement Allowance</li>
-                            <li>Carer's Allowance</li>
-                            <li>Maternity Allowance</li>
-                            <li>Severe Disablement Allowance</li>
-                            <li>Industrial Injuries Disablement Benefit</li>
-                            <li>Widowed Parent's Allowance</li>
-                            <li>Widow's Pension</li>
-                            <li>Universal Credit with no earned income</li>
-                            <li>A social security benefit paid by a country other than the UK</li>
-                        </ul>
-                        <label class="mid-list-label">Scotland only:</label>
-                        <ul>
-                            <li>Skillseekers Training</li>
-                            <li>War Widows</li>
-                            <li>Widower's or Surviving Civil Partner's Pension</li>
-                        </ul>
+                    </label> <!--TODO: Squash this to fit on single page, maybe a s two columns, on desktop-->
+                    <div class="long-list-wrapper">
+                        <div class="long-list-one">
+                            <ul>
+                                <li>Income Support</li>
+                                <li>Income-based Jobseeker's Allowance</li>
+                                <li>Income-related Employment and Support Allowance</li>
+                                <li>Pension Credit</li>
+                                <li>Contribution-based Jobseeker's Allowance</li>
+                                <li>Contribution-based Employment and Support</li>
+                                <li>State Pension</li>
+                                <li>Incapacity Benefit</li>
+                                <li>Training Allowance</li>
+                                <li>Armed Forces Compensation Scheme Payments</li>
+                                <li>War Disablement Pension</li>
+                                <li>Bereavement Allowance</li>
+                                <li>Carer's Allowance</li>
+                            </ul>
+                        </div>
+                        <div class="long-list-two">
+                            <ul>
+                                <li>Maternity Allowance</li>
+                                <li>Severe Disablement Allowance</li>
+                                <li>Industrial Injuries Disablement Benefit</li>
+                                <li>Widowed Parent's Allowance</li>
+                                <li>Widow's Pension</li>
+                                <li>Universal Credit with no earned income</li>
+                                <li>A social security benefit paid by a country other than the UK</li>
+                            </ul>
+                            <label class="mid-list-label">Scotland only:</label>
+                            <ul>
+                                <li>Skillseekers Training</li>
+                                <li>War Widows</li>
+                                <li>Widower's or Surviving Civil Partner's Pension</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div>
+                    <div class="benefit-radio">
                         @Html.RadioButtonFor(m => m.PayingParentReceivesBenefit, true) Yes
                         @Html.RadioButtonFor(m => m.PayingParentReceivesBenefit, false) No
                     </div>

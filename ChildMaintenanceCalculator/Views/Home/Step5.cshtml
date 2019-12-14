@@ -21,9 +21,11 @@
         <form id="step5" asp-controller="Home" asp-action="Step5" method="post">
 
             <div class="form-block">
-                <div class="form-field">
-                    <label>For how many other children does the paying parent or their partner receive child benefit?</label>
-                    <input asp-for="OtherSupportedChildren" />
+                <div>
+                    <label class="form-label">For how many other children does the paying parent or their partner receive child benefit?</label>
+                </div>
+                <div>
+                    <input asp-for="OtherSupportedChildren" min="0"/>
                 </div>
             </div>
 

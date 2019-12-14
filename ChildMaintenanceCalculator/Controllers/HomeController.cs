@@ -28,6 +28,8 @@ namespace ChildMaintenanceCalculator.Controllers
             this.emailSenderService = emailSenderService;
         }
 
+        //TODO: COOKIE CONSENT
+
         public IActionResult Index()
         {
             return View();
@@ -64,7 +66,7 @@ namespace ChildMaintenanceCalculator.Controllers
                     Id = x.Id,
                     FirstName = x.FirstName,
                     PreExistingMaintenanceArrangements = x.PreExistingArrangements,
-                    PreExistingMaintenanceArrangementsAmount = x.PreExisingArrangementsAmount
+                    PreExistingMaintenanceArrangementsAmount = x.PreExisingArrangementsAmount ?? 0
                 }).ToList()
             }).ToList();
 
@@ -157,8 +159,8 @@ namespace ChildMaintenanceCalculator.Controllers
         {
             Calculation calculation = this.GetModel();
 
-            calculation.PayingParent.AnnualIncome = vm.PayingParentAnnualIncome;
-            calculation.PayingParent.AnnualPension = vm.PayingParentAnnualPension;
+            calculation.PayingParent.AnnualIncome = vm.PayingParentAnnualIncome ?? 0;
+            calculation.PayingParent.AnnualPension = vm.PayingParentAnnualPension ?? 0;
 
             this.StoreModel(calculation);
 

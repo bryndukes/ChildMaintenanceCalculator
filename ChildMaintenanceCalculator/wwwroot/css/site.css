@@ -152,7 +152,7 @@ input[type="number"] {
 .mid-list-label {
     font-weight: 700;
     opacity: .6;
-    margin-left: 20px;
+    margin: 5px 0 0 20px !important;
 }
 
 .result-section-header {
@@ -174,6 +174,11 @@ input[type="number"] {
 .horizontal-field {
     display: inline-block;
     margin: 0 20px 0 0 !important;
+}
+
+.currency-label {
+    color: #535454;
+    padding-right: 5px;
 }
 
 .result-money {
@@ -202,8 +207,26 @@ input[type="number"] {
     width: 60%;
 }
 
-@media screen and (max-width: 768px) {
+.long-list-wrapper {
+    overflow: hidden;
+    padding-top: 10px;
+    margin-bottom: 15px;
+}
 
+.long-list-one {
+    float:left; 
+    width:50%;
+}
+
+.long-list-two {
+    overflow:hidden;
+}
+
+.benefit-radio {
+    margin-left: 15px;
+}
+
+@media screen and (max-width: 768px) {
     .content-desktop {
         display: none;
     }
@@ -220,8 +243,15 @@ input[type="number"] {
         display: inline-block;
     }
 
-    result-column-one {
+    .result-column-one {
         width: 100%;
+    }
+
+    .long-list-one { 
+        float: none;
+        margin-right:0;
+        width:auto;
+        border:0;
     }
 
 }
