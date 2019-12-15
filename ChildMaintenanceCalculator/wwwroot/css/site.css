@@ -197,7 +197,7 @@ input[type="number"] {
 }
 
 .result-subsection {
-    margin-bottom: 0.7em;
+    margin-bottom: 0.7em; 
 }
 
 .result-column-one {
@@ -224,6 +224,28 @@ input[type="number"] {
 
 .benefit-radio {
     margin-left: 15px;
+}
+
+.share-button-wrapper {
+    margin-bottom: 20px;
+}
+
+.share-button {
+    width: 170px;
+    margin-right: 10px;
+}
+
+.email-instruction {
+    margin-top: 10px;
+}
+
+.email-address {
+    width: 280px;
+    margin-bottom: 20px !important;
+}
+
+#emailPartial {
+    display: none;
 }
 
 @media screen and (max-width: 768px) {

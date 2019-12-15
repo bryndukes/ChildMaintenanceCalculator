@@ -1,0 +1,72 @@
+﻿@model User;
+
+<div class="form-page-wrap">
+    <div class="form-page-content">
+
+        <div>
+            <h3 class="calculator-title">
+                Child Maintenance Calculator
+            </h3>
+        </div>
+        
+        <div class="form-block">
+
+            <div class="form-step-instruction email-instruction">
+                <span>
+                    Please enter your email address below
+                </span>
+            </div>
+            <div class="form-step-subinstruction">
+                <span>
+                    Your email address will not be used for any other purpose than to provide you with the calculation
+                </span>
+            </div>
+
+            <form id="emailResult" enctype="multipart/form-data">
+
+                <div>
+                    <input type="text" class="email-address" name="EmailAddress" />
+                </div>
+
+                <div>
+                    <span>
+                        Would you like to share the calculation result with someone else, such as a co-parent, mediator or lawyer?
+                    </span>
+                </div>
+
+
+                <button type="submit" name="submit" class="form-add-button">Send</button>
+
+            </form>
+        </div>
+
+        <input type="button"
+               value="Back to Result"
+               onclick="location.href='@Url.Action("Result", "Home")'"
+               class="form-next-button" />
+
+    </div>
+</div>
+
+<script>
+    $("#emailResult").on('submit', function (event) {
+        event.preventDefault();
+
+        var emailAddress = $('.email-address').val(); //TODO: Try using ID instead of class here
+
+        if (emailAddress) {
+            $.ajax({
+                url: '/Home/EmailResult',
+                datatype: 'json',
+                data: { emailAddress: emailAddress },
+                type: 'POST',
+                success: function () {
+                    alert("Email sent successfully");
+                },
+                error: function () {
+                    alert("Error sending email, please try again");
+                }
+            });
+        }
+    });
+</script>

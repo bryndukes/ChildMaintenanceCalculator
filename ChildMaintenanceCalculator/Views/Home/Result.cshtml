@@ -23,16 +23,29 @@
 
         @Html.PartialFor(model => model, "_ResultPartial")
 
-        @Html.PartialFor(model => model.User, "_EmailResultPartial")
-
-        <br />
+        <div class="form-page-header">
+            <div>
+                <h3 class="form-step-title">
+                    Save and Share
+                </h3>
+            </div>
+        </div>
+        <div class="share-button-wrapper">
+            <button class="share-button" onclick="location.href='@Url.Action("GetResultAsPdf", "Home")'">
+                Download PDF &nbsp;<i class="fa fa-download"></i>
+            </button>
+            <button id="emailButton" class="share-button" onclick="location.href='@Url.Action("EmailResult", "Home")'">
+                Email results &nbsp; <i class="fa fa-envelope"></i>
+            </button>
+        </div>
 
         <input type="button"
                value="Start a New Calculation"
-               onclick="location.href='@Url.Action("Step1", "Home")'" 
-               class="form-next-button"/>
+               onclick="location.href='@Url.Action("Step1", "Home")'"
+               class="form-next-button" />
 
     </div>
 </div>
         
-        }
+}
+

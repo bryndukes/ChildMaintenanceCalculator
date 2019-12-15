@@ -9,6 +9,8 @@ using ChildMaintenanceCalculator.Models.ViewModels;
 using ChildMaintenanceCalculator.Services;
 using ExtensionMethods;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Rotativa.AspNetCore;
+using Rotativa.AspNetCore.Options;
 
 namespace ChildMaintenanceCalculator.Controllers
 {
@@ -262,6 +264,12 @@ namespace ChildMaintenanceCalculator.Controllers
             return View("Result", calculation);
         }
 
+        [HttpGet]
+        public IActionResult EmailResult()
+        {
+            return View("Email");
+        }
+
         [HttpPost]
         public async void EmailResult(string emailAddress)
         {
@@ -280,8 +288,22 @@ namespace ChildMaintenanceCalculator.Controllers
             emailSenderService.SendEmail(emailBody, emailAddress);
 
             //TODO: This needs to actually return a success flag so the user can know if the email was sent?
-            
 
+        }
+
+        [HttpGet]
+        public IActionResult GetResultAsPdf()
+        {
+            var model = this.PeekModel();
+
+            string footer = " --footer-center \"" + DateTime.Now.Date.ToString("MM/dd/yyyy") + "  Page: [page]/[toPage]\"" + " --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\"";
+
+            return new ViewAsPdf("ResultPdfTemplate", model)
+            {
+                PageSize = Size.A4,
+                FileName = "ChildMaintenanceCalculationResult.pdf",
+                CustomSwitches = footer
+            };
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

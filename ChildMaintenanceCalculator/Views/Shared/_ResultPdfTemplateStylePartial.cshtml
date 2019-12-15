@@ -1,0 +1,208 @@
+﻿/*TODO: Convert all sizes to px*/
+
+.content-desktop {display: block;}
+.content-mobile {display: none;}
+.content-desktop-inline {display: inline-block;}
+.content-mobile-inline {display: none;}
+
+
+.custom-body {
+    padding: 30px;
+    line-height: 1.7;
+    font-size: 16px;
+    font-family: "Lato",sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    color: rgb(52,52,52);
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.form-page-wrap {
+    padding: 30px !important;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0.15em 0.35em 0 rgba(0,0,0,0.135);
+}
+
+.form-page-content {
+
+}
+
+.calculator-title {
+    font-weight: 700;
+}
+
+.form-page-header {
+    margin-bottom: 20px;
+}
+
+.form-step-title {
+    opacity: .6;
+}
+
+.form-step-instruction {
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    font-weight: 600;
+    opacity: .8;
+}
+
+.form-step-subinstruction {
+    margin-bottom: 20px;
+}
+
+.form-block {
+    margin-top: 1.313em;
+}
+
+.form-next-button {
+    background-color: #f7941d;
+    color: #fff;
+    text-shadow: 0 0.075em 0.075em rgba(0,0,0,0.5);
+    line-height: 1.3;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.813em 1.125em 0.813em;
+    border: none;
+    margin-top: 1.313em;
+}
+
+.form-add-button {
+    background-color: #33cc33;
+    color: #fff;
+    text-shadow: 0 0.075em 0.075em rgba(0,0,0,0.5);
+    line-height: 1.3;
+    text-align: center;
+    vertical-align: middle;
+    width: 120px;
+    padding: 0.513em 1em 0.513em;
+    border: none;
+    margin-top: 1.313em;
+}
+
+.form-label {
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: .43767em;
+    display: inline-block;
+}
+
+.form-field {
+    margin-bottom: 1.313em;
+}
+
+.receiving-parent-title {
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: 600;
+    opacity: .8;
+}
+
+.child-title {
+    font-size: 17px;
+    line-height: 1.5;
+    font-weight: 600;
+    opacity: .8;
+}
+
+.add-child-div {
+    margin-left: 20px !important;
+}
+
+input[type="text"],input[type="number"],.form-ddl {
+    display: inline-block;
+    height: 2.65em;
+    margin-bottom: 9px;
+    border: 1px solid #ddd;
+    padding: 0 .65em;
+    font-size: 13px;
+    line-height: normal;
+    color: #555;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+}
+
+input[type="number"] {
+    width: 70px;
+}
+
+.mid-list-label {
+    font-weight: 700;
+    opacity: .6;
+    margin-left: 20px;
+}
+
+.result-section-header {
+    font-size: 19px;
+    line-height: 1.7;
+    font-weight: 600;
+    opacity: .6;
+}
+
+.hidden-field {
+    display: none !important;
+}
+
+.horizontal-field {
+    display: inline-block;
+    margin: 0 20px 0 0 !important;
+}
+
+.result-money {
+    color: #f7941d;
+}
+
+.result-subtext {
+    line-height: 1;
+    font-size: 14px;
+}
+
+.result-submoney {
+    line-height: 1;
+    font-size: 14px;
+    opacity: .6;
+}
+
+.result-subsection {
+    margin-bottom: 0.7em;
+}
+
+.result-column-one {
+    width: 40%;
+}
+.result-column-two {
+    width: 60%;
+}
+
+hr {
+max-width: 500px;
+margin-left: 0;
+}
+
+@@media screen and (max-width: 768px) {
+
+    .content-desktop {
+        display: none;
+    }
+
+    .content-mobile {
+        display: block;
+    }
+
+    .content-desktop-inline {
+        display: none;
+    }
+
+    .content-mobile-inline {
+        display: inline-block;
+    }
+
+    result-column-one {
+        width: 100%;
+    }
+
+}
