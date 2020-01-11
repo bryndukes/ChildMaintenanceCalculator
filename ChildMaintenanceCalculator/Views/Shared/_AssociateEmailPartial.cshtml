@@ -1,0 +1,18 @@
+﻿@model List<string>
+
+<div id="associate-email" class="hidden-field">
+    <ul id="associateList" class="associate-list">
+        @for (int i = 0; i < Model.Count; ++i)
+        {
+            <li>
+                @Html.TextBoxFor(model => model[i])
+                @*<input type="text" class="associate-email-address" name="AssociateEmailAddress" />*@
+            </li>
+        }
+    </ul>
+    <div class="remove-button-div horizontal-field">
+        <button type="button" id="addAssociateEmailButton" class="remove-child-button">
+            <i class="fa fa-trash"></i>
+        </button>
+    </div>
+</div>

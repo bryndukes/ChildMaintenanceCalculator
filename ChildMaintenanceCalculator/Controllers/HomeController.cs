@@ -267,28 +267,45 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpGet]
         public IActionResult EmailResult()
         {
-            return View("Email");
+            EmailViewModel vm = new EmailViewModel();
+            return View("Email", vm);
         }
 
         [HttpPost]
-        public async void EmailResult(string emailAddress)
+        public async void EmailResult(EmailViewModel model)
         {
-            if (String.IsNullOrEmpty(emailAddress))
+            if (String.IsNullOrWhiteSpace(model.User.EmailAddress))
             {
                 //TODO:Handle this error somehow?
                 //Validation should be added to the model property so that will be handled by that, so this would probably be an unexpected exception?
             }
 
-            var model = this.PeekModel();
+            var calculation = this.PeekModel();
             var contextAccessor = new ActionContextAccessor();
             contextAccessor.ActionContext = ControllerContext;
-            var emailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, model);
+
+            var vm = new EmailTemplateViewModel()
+            {
+                Calculation = calculation
+            };
+            if (!String.IsNullOrWhiteSpace(model.User.FirstName))
+            {
+                vm.RecipientName = model.User.FirstName;
+            }
+            var userEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
             //TODO: Error Handling
 
-            emailSenderService.SendEmail(emailBody, emailAddress);
+            emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress);
+
+            foreach (var contact in model.Associates.Where(contact => !String.IsNullOrWhiteSpace(contact.EmailAddress)))
+            {
+                vm.RecipientName = string.IsNullOrWhiteSpace(contact.FirstName) ? string.Empty : contact.FirstName;
+
+                var assEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
+                emailSenderService.SendEmail(assEmailBody, contact.EmailAddress);
+            }
 
             //TODO: This needs to actually return a success flag so the user can know if the email was sent?
-
         }
 
         [HttpGet]

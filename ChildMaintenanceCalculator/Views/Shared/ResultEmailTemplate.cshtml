@@ -12,12 +12,18 @@
 </head>
 <body>
     @using System.Globalization
-    @model Calculation;
+    @model ChildMaintenanceCalculator.Models.ViewModels.EmailTemplateViewModel;
 
 <!--TODO: Config the message content-->
 <div>
     <p>
-        Hi,<br/>
+        Hi
+        @if (!String.IsNullOrWhiteSpace(Model.RecipientName))
+              {
+                 @Model.RecipientName
+              }
+        ,
+        <br/>
         <br/>
         Thank you for using the Child Maintenance Calculator.<br/>
         Please find your calculation results below.<br/>
@@ -36,9 +42,9 @@
             <tr>
                 <td>
                     <span class="result-label">Total child maintenance payable per week</span>
-                    <label class="result-money content-mobile-inline">@Model.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label>
+                    <label class="result-money content-mobile-inline">@Model.Calculation.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label>
                 </td>
-                <td class="content-desktop"><label class="result-money content-desktop">@Model.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label></td>
+                <td class="content-desktop"><label class="result-money content-desktop">@Model.Calculation.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label></td>
             </tr>
         </table>
 
@@ -50,7 +56,7 @@
 
         <label class="result-section-header">Breakdown</label>
 
-        @foreach (var receivingParent in Model.PayingParent.ReceivingParents)
+        @foreach (var receivingParent in Model.Calculation.PayingParent.ReceivingParents)
         {
             <div class="form-field">
 

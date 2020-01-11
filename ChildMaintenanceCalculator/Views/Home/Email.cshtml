@@ -1,72 +1,165 @@
-﻿@model User;
+﻿@model ChildMaintenanceCalculator.Models.ViewModels.EmailViewModel;
 
-<div class="form-page-wrap">
-    <div class="form-page-content">
+    <div id="wrapper" class="form-page-wrap">
+        <div class="form-page-content">
 
-        <div>
-            <h3 class="calculator-title">
-                Child Maintenance Calculator
-            </h3>
-        </div>
-        
-        <div class="form-block">
-
-            <div class="form-step-instruction email-instruction">
-                <span>
-                    Please enter your email address below
-                </span>
-            </div>
-            <div class="form-step-subinstruction">
-                <span>
-                    Your email address will not be used for any other purpose than to provide you with the calculation
-                </span>
+            <div>
+                <h3 class="calculator-title">
+                    Child Maintenance Calculator
+                </h3>
             </div>
 
-            <form id="emailResult" enctype="multipart/form-data">
+            <div class="form-block">
 
-                <div>
-                    <input type="text" class="email-address" name="EmailAddress" />
-                </div>
-
-                <div>
+                <div class="form-step-instruction email-instruction">
                     <span>
-                        Would you like to share the calculation result with someone else, such as a co-parent, mediator or lawyer?
+                        Please enter your email address below
+                    </span>
+                </div>
+                <div class="form-step-subinstruction">
+                    <span>
+                        Your email address will not be used for any other purpose than to provide you with the calculation
                     </span>
                 </div>
 
+                <form id="emailResult" enctype="multipart/form-data">
+                    <div class="contact-field user">
+                        <div>
+                            <label asp-for="User.FirstName"></label>
+                            <input class="fname" asp-for="User.FirstName" />
+                        </div>
+                        <div>
+                            <label asp-for="User.EmailAddress"></label>
+                            <input class="email-address" asp-for="User.EmailAddress" />
+                        </div>
+                    </div>
 
-                <button type="submit" name="submit" class="form-add-button">Send</button>
+                    <div class="form-step-subinstruction">
+                        <span>
+                            Would you like to share the calculation result with someone else, such as a co-parent, mediator or lawyer?
+                        </span>
+                        <input type="checkbox" id="emailAssociateCheckbox" />
+                    </div>
+                    <div id="associates" class="hidden-field">
+                        <ul id="associate-list">
+                            @foreach (var associate in Model.Associates)
+                            {
+                                <li class="associate">
+                                    <div class="contact-field">
+                                        <div>
+                                            <label asp-for="@associate.FirstName"></label>
+                                            <input class="fname" asp-for="@associate.FirstName" />
+                                        </div>
+                                        <div>
+                                            <label asp-for="@associate.EmailAddress"></label>
+                                            <input class="email-address" asp-for="@associate.EmailAddress" />
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                        <div class="add-associate-button-div">
+                            <button type="button" id="addAssociateButton" class="add-associate-button">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
 
-            </form>
+                    <div class="send-container">
+                        <button id="sendEmail" type="submit" name="submit" class="form-add-button">Send</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <input type="button"
+                   value="Back to Result"
+                   onclick="location.href = '@Url.Action("Result", "Home")'"
+                   class="form-next-button" />
+
         </div>
-
-        <input type="button"
-               value="Back to Result"
-               onclick="location.href='@Url.Action("Result", "Home")'"
-               class="form-next-button" />
-
+        <div class="spinner-wrapper">
+            <div id="loading" class="spinner"><img class="loader" src="~/images/ajax-loader-2.gif" /></div>
+        </div>
     </div>
-</div>
+
 
 <script>
-    $("#emailResult").on('submit', function (event) {
-        event.preventDefault();
 
-        var emailAddress = $('.email-address').val(); //TODO: Try using ID instead of class here
+    var $spinner = $('.spinner-wrapper').hide();
+    var $cover = $('#cover');
 
-        if (emailAddress) {
-            $.ajax({
-                url: '/Home/EmailResult',
-                datatype: 'json',
-                data: { emailAddress: emailAddress },
-                type: 'POST',
-                success: function () {
-                    alert("Email sent successfully");
-                },
-                error: function () {
-                    alert("Error sending email, please try again");
-                }
+    $(document).ready(function() {
+
+        $(document)
+            .ajaxStart(function () {
+                $cover.show();
+                $spinner.show();
+                $("#sendEmail").attr("disabled", true);
+            })
+            .ajaxStop(function () {
+                $cover.hide();
+                $spinner.hide();
+                $("#sendEmail").attr("disabled", false);
             });
-        }
+
+        $("#emailResult").on('submit',
+            function(event) {
+                event.preventDefault();
+
+                var userData = $(".user")[0];
+
+                var user =
+                {
+                    FirstName: $(userData).find(".fname")[0].value,
+                    EmailAddress: $(userData).find(".email-address")[0].value
+                }
+
+                var associateData = $(".associate");
+
+                var associates = [];
+
+                $.each(associateData,
+                    function() {
+                        var fName = $(this).find('.fname')[0].value;
+                        var email = $(this).find('.email-address')[0].value;
+                        associates.push({ FirstName: fName, EmailAddress: email });
+                    });
+
+                var model =
+                {
+                    User: user,
+                    Associates: associates
+                }
+
+                $.ajax({
+                    url: '/Home/EmailResult',
+                    datatype: 'json',
+                    data: model,
+                    type: 'POST',
+                    success: function() {
+                        alert("Email sent successfully");
+                    },
+                    error: function() {
+                        alert("Error sending email, please try again");
+                    }
+                });
+            });
+
+        $('#emailAssociateCheckbox').change(function() {
+            if (this.checked) {
+                $('#associates')[0].classList.remove("hidden-field");
+            } else {
+                $('#associates')[0].classList.add("hidden-field");
+            }
+        });
+
+        $(document).on('click', "#addAssociateButton", function (evt) {
+            event.preventDefault();
+            console.log("hit");
+            $("#associate-list").append(
+                "<hr/><li class='associate'><div class='contact-field form-field'><div><label>First Name</label><input class='fname' type='text'/></div><div><label>Email Address</label><input class='email-address' type='text'/></div></div></li>");
+        });
+
     });
 </script>

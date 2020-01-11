@@ -16,17 +16,17 @@
 </head>
 <body class="custom-body">
 
-<partial name="_CookieConsentPartial" />
+<partial name="_CookieConsentPartial"/>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="~/js/site.min.js" asp-append-version="true"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/js/site.min.js" asp-append-version="true"></script>
 
-    <div class="container">
-        @RenderBody()
-        <hr />
-    </div>
+<div class="container">
+    @RenderBody()
+    <hr/>
+</div>
 
-    @RenderSection("Scripts", required: false)
+@RenderSection("Scripts", required: false)
 </body>
 </html>

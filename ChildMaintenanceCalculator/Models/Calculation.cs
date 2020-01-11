@@ -12,8 +12,6 @@ namespace ChildMaintenanceCalculator.Models
 
         public PayingParent PayingParent = new PayingParent();
 
-        public User User = new User();
-
         public string RateBand { get; set; } //TODO:Should this be a class/Enum?
 
         private decimal totalMaintenancePayable;
