@@ -87,18 +87,15 @@
 <script>
 
     var $spinner = $('.spinner-wrapper').hide();
-    var $cover = $('#cover');
 
     $(document).ready(function() {
 
         $(document)
             .ajaxStart(function () {
-                $cover.show();
                 $spinner.show();
                 $("#sendEmail").attr("disabled", true);
             })
             .ajaxStop(function () {
-                $cover.hide();
                 $spinner.hide();
                 $("#sendEmail").attr("disabled", false);
             });

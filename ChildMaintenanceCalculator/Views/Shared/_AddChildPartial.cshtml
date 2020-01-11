@@ -26,14 +26,14 @@
 
                 <div class="form-field horizontal-field">
                     <label class="form-label">First name</label>
-                    <div>
+                    <div class="input-div">
                         <input asp-for="FirstName"/>
                     </div>
                 </div>
 
                 <div class="form-field horizontal-field">
                     <label class="form-label">Pre-existing arrangements</label>
-                    <div>
+                    <div class="input-div">
                         @Html.RadioButtonFor(m => m.PreExistingArrangements, true, new {OnChange = $"preExistingArrangementsChanged(true, {childId})"}) Yes
                         @Html.RadioButtonFor(m => m.PreExistingArrangements, false, new {@checked = "checked", OnChange = $"preExistingArrangementsChanged(false, {childId});"}) No
                     </div>
@@ -43,8 +43,8 @@
                 <!--TODO: Make this conditionally visible dependin on checkbox above-->
                 <div class="form-field hidden-field horizontal-field" id="@($"preexistingArrangementsAmount{childId}")">
                     <label class="form-label">Pre-existing arrangements amount</label>
-                    <div>
-                        <span class="currency-label">£</span><input asp-for="PreExisingArrangementsAmount"/>
+                    <div class="input-div">
+                        <span class="currency-label">£</span><input asp-for="PreExisingArrangementsAmount"/><span class="currency-label"> per week</span>
                     </div>
                 </div>
 
