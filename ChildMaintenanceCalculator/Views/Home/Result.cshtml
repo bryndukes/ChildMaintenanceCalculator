@@ -16,12 +16,30 @@
         <div class="form-page-header">
             <div>
                 <h3 class="form-step-title">
-                    Result
+                    Calculation Result
                 </h3>
             </div>
         </div>
+        
+        <div>
+            <div class="tab-container">
+                <ul class="tabs">
+                    <li id="resultItem" class="tabs-item active"><a onclick="openTab('result')">Result</a></li><li id="answersItem" class="tabs-item"><a onclick="openTab('answers')">Answers</a></li>@*<li id="explanationItem" class="tabs-item"><a onclick="openTab('explanation')">Explanation</a></li>*@
+                </ul>
+            </div>
+            <div class="tab-right">
+            </div>
+        </div>
 
-        @Html.PartialFor(model => model, "_ResultPartial")
+        <div id="resultTab" class="tab">
+            @Html.PartialFor(model => model, "_ResultPartial")
+        </div>
+        <div id="answersTab" class="tab closed">
+            @Html.PartialFor(model => model,"_AnswersPartial")
+        </div>
+        @*<div id="explanationTab" class="tab closed">
+            @Html.Partial("_ExplanationPartial")
+        </div>*@
 
         <div class="form-page-header">
             <div>
@@ -48,4 +66,23 @@
 </div>
         
 }
+
+<script>
+    function openTab(tab) {
+        $(".tabs-item").removeClass("active");
+        var tabItemId = tab + "Item";
+        console.log(tabItemId);
+        $("#" + tab + "Item").addClass("active");
+        
+        var i;
+        var tabs = $(".tab");
+        for (i = 0; i < tabs.length; i++) {
+            tabs[i].style.display = "none";
+        }
+
+        var tabId = tab + "Tab";
+        console.log(tabId);
+        document.getElementById(tabId).style.display = "block";
+    }
+</script>
 

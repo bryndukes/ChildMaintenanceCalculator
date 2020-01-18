@@ -1,4 +1,5 @@
 ﻿@using ChildMaintenanceCalculator.Models.ViewModels;
+@using ExtensionMethods
 
 @model Step3BViewModel;
 
@@ -36,10 +37,10 @@
                                 
                                 <div>
                                     @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, Child.SharedCare.LessThan52)
-                                    Less than once per week
+                                    @Child.SharedCare.LessThan52.GetDescription()
                                     <br />
                                     @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, Child.SharedCare.MoreThanOrEqualTo52)
-                                    Once per week or more
+                                    @Child.SharedCare.MoreThanOrEqualTo52.GetDescription()
                                 </div>
                             </div>
                             

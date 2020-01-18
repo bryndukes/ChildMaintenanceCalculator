@@ -161,6 +161,7 @@ input[type="number"] {
     line-height: 1.7;
     font-weight: 600;
     opacity: .6;
+    margin-bottom: 10px;
 }
 
 .hidden-field {
@@ -208,10 +209,10 @@ input[type="number"] {
 }
 
 .result-column-one {
-    width: 40%;
+    width: 85%;
 }
 .result-column-two {
-    width: 60%;
+    width: 15%;
 }
 
 .result-parent-label {
@@ -333,6 +334,95 @@ input[type="number"] {
     height: 35px;
 }
 
+.closed {
+    display: none;
+}
+
+.tab-container {
+    height: 40px;
+    width: 300px;
+    float: left;
+}
+
+.tab-right {
+    border-bottom: 1px solid #ddd;
+    height: 41px;
+    margin-left: 200px;
+}
+
+
+.tabs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+    .tabs li {
+        margin: 0;
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        cursor: pointer;
+        background: white;
+        display: inline-block;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .tabs span {
+        width: 2px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .tabs li:not(.active):hover {
+        background: #f2f2f2;
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+
+        .tabs li > a {
+            text-decoration: none;
+            color: gray
+        }
+
+        .tabs li.active {
+            z-index: 1000;
+            border-top-right-radius: 4px;
+            border-top-left-radius: 4px;
+            border: 1px solid #ccc;
+            border-bottom-color: #fff !important;
+            color: grey;
+            cursor: default;
+        }
+
+
+        .tabs a {
+                display:inline-block;
+                width:100%;
+                height:100%;
+            }
+
+.question {
+    margin-bottom: 0;
+    font-weight: 300;
+}
+
+    .question span {
+        color: #f7941d;
+        font-weight:400;
+    }
+
+.panel {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #F0F4F5;
+    max-width: 600px;
+}
+
+.darkline {
+    border-color: #cccccc;
+}
 
 @media screen and (max-width: 768px) {
     .content-desktop {
