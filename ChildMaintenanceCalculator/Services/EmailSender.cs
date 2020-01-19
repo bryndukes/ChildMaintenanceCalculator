@@ -9,7 +9,7 @@ namespace ChildMaintenanceCalculator.Services
 {
     public interface IEmailSenderService
     {
-        void SendEmail(string body, string emailTo);
+        bool SendEmail(string body, string emailTo);
     }
 
     public class EmailSenderService : IEmailSenderService
@@ -23,23 +23,33 @@ namespace ChildMaintenanceCalculator.Services
         internal const string emailSubject = "Your Calculation";
 
         //TODO: Can this be made to return a success flag?
-        public void SendEmail(string body, string emailTo)
+        public bool SendEmail(string body, string emailTo)
         {
-            using (var mailMessage = new MailMessage())
-            using (var client = new SmtpClient(smtpServer, smtpPort))
+            try
             {
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(smtpUser, smtpPassword);
-                client.EnableSsl = true;
+                using (var mailMessage = new MailMessage())
+                using (var client = new SmtpClient(smtpServer, smtpPort))
+                {
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential(smtpUser, smtpPassword);
+                    client.EnableSsl = true;
 
-                mailMessage.From = new MailAddress(emailFrom);
-                mailMessage.To.Insert(0, new MailAddress(emailTo));
-                mailMessage.Subject = emailSubject;
-                mailMessage.Body = body;
-                mailMessage.IsBodyHtml = true;
+                    mailMessage.From = new MailAddress(emailFrom);
+                    mailMessage.To.Insert(0, new MailAddress(emailTo));
+                    mailMessage.Subject = emailSubject;
+                    mailMessage.Body = body;
+                    mailMessage.IsBodyHtml = true;
 
-                client.Send(mailMessage);
+                    client.Send(mailMessage);
+                    return true;
+                }
             }
+            catch (Exception e)
+            {
+                //TODO: Log exception Details
+                return false;
+            }
+
         }
     }
 }

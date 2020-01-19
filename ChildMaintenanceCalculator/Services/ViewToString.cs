@@ -37,42 +37,48 @@ namespace ChildMaintenanceCalculator.Services
 
         public async Task<string> RenderToStringAsync(string viewName, IActionContextAccessor contextAccessor, object model)
         {
-            //var httpContext = new DefaultHttpContext {RequestServices = _serviceProvider};
-            //var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-
-            var actionContext = contextAccessor.ActionContext;
-            if (actionContext == null)
+            try
             {
-                throw new ArgumentNullException("Action context is null");
-            }
-
-            using (var sw = new StringWriter())
-            {
-                var viewResult = _razorViewEngine.FindView(actionContext, viewName, false);
-
-                if (viewResult.View == null)
+                var actionContext = contextAccessor.ActionContext;
+                if (actionContext == null)
                 {
-                    throw new ArgumentNullException($"{viewName} does not match any available view");
+                    throw new ArgumentNullException("Action context is null");
                 }
 
-                var viewDictionary =
-                    new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                using (var sw = new StringWriter())
+                {
+                    var viewResult = _razorViewEngine.FindView(actionContext, viewName, false);
+
+                    if (viewResult.View == null)
                     {
-                        Model = model
-                    };
+                        throw new ArgumentNullException($"{viewName} does not match any available view");
+                    }
 
-                var viewContext = new ViewContext(
-                    actionContext,
-                    viewResult.View,
-                    viewDictionary,
-                    new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
-                    sw,
-                    new HtmlHelperOptions()
-                );
+                    var viewDictionary =
+                        new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                        {
+                            Model = model
+                        };
 
-                await viewResult.View.RenderAsync(viewContext);
-                return sw.ToString();
+                    var viewContext = new ViewContext(
+                        actionContext,
+                        viewResult.View,
+                        viewDictionary,
+                        new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
+                        sw,
+                        new HtmlHelperOptions()
+                    );
+
+                    await viewResult.View.RenderAsync(viewContext);
+                    return sw.ToString();
+                }
             }
+            catch (Exception e)
+            {
+                //Log exception details
+                return string.Empty;
+            }
+            
         }
     }
 }

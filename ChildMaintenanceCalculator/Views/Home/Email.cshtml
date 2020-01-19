@@ -95,10 +95,6 @@
                 $spinner.show();
                 $("#sendEmail").attr("disabled", true);
             })
-            .ajaxStop(function () {
-                $spinner.hide();
-                $("#sendEmail").attr("disabled", false);
-            });
 
         $("#emailResult").on('submit',
             function(event) {
@@ -134,10 +130,14 @@
                     datatype: 'json',
                     data: model,
                     type: 'POST',
-                    success: function() {
-                        alert("Email sent successfully");
+                    success: function(data) {
+                        $spinner.hide();
+                        $("#sendEmail").attr("disabled", false);
+                        alert(data);
                     },
                     error: function() {
+                        $spinner.hide();
+                        $("#sendEmail").attr("disabled", false);
                         alert("Error sending email, please try again");
                     }
                 });

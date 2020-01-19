@@ -272,7 +272,7 @@ namespace ChildMaintenanceCalculator.Controllers
         }
 
         [HttpPost]
-        public async void EmailResult(EmailViewModel model)
+        public async Task<ContentResult> EmailResult(EmailViewModel model)
         {
             if (String.IsNullOrWhiteSpace(model.User.EmailAddress))
             {
@@ -292,20 +292,27 @@ namespace ChildMaintenanceCalculator.Controllers
             {
                 vm.RecipientName = model.User.FirstName;
             }
-            var userEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
-            //TODO: Error Handling
 
-            emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress);
+            var userEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
+            if(String.IsNullOrEmpty(userEmailBody))
+                return Content("Unable to send emails. Please try again or use the PDF download option");
+
+            var userSuccess = emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress);
+
+            var associateSuccess = true;
 
             foreach (var contact in model.Associates.Where(contact => !String.IsNullOrWhiteSpace(contact.EmailAddress)))
             {
                 vm.RecipientName = string.IsNullOrWhiteSpace(contact.FirstName) ? string.Empty : contact.FirstName;
 
                 var assEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
-                emailSenderService.SendEmail(assEmailBody, contact.EmailAddress);
+                associateSuccess = emailSenderService.SendEmail(assEmailBody, contact.EmailAddress);
             }
 
-            //TODO: This needs to actually return a success flag so the user can know if the email was sent?
+            if (userSuccess && associateSuccess)
+                return Content("Email(s) sent successfully");
+
+            return Content("Unable to send one or more of your emails. Please try again or use the PDF download option");
         }
 
         [HttpGet]
