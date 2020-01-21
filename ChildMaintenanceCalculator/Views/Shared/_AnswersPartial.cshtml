@@ -6,64 +6,65 @@
     var children = Model.PayingParent.ReceivingParents.SelectMany(p => p.Children);
 }
 
-<div class="form-block">
+    <div id="answersContainer" class="form-block">
 
-    <label class="result-section-header">Your Answers</label>
 
-    <div class="form-field">
-        <label class="receiving-parent-title">Receiving parents and children</label>
-        <label class="question">Number of receiving parents:&nbsp;&nbsp; <span>@Model.PayingParent.ReceivingParents.Count</span></label>
-        <label class="question">Total number of receiving children:&nbsp;&nbsp; <span>@children.Count()</span></label>
-    </div>
-    <hr />
-    <div class="form-field">
-        <label class="receiving-parent-title">Pre-existing Arrangements</label>
-        @foreach (var child in children)
+        <label class="result-section-header">Answers Given</label>
+
+        <div class="form-field">
+            <label class="receiving-parent-title">Receiving parents and children</label>
+            <label class="question">Number of receiving parents:&nbsp;&nbsp; <span>@Model.PayingParent.ReceivingParents.Count</span></label>
+            <label class="question">Total number of receiving children:&nbsp;&nbsp; <span>@children.Count()</span></label>
+        </div>
+        <hr />
+        <div class="form-field">
+            <label class="receiving-parent-title">Pre-existing Arrangements</label>
+            @foreach (var child in children)
+            {
+                <label class="question">@child.FirstName:&nbsp;&nbsp; <span>@child.PreExistingMaintenanceArrangementsAmount.ToString("C", CultureInfo.CurrentCulture)</span></label>
+            }
+        </div>
+        <hr />
+        <div class="form-field">
+            <label class="receiving-parent-title">Paying Parent's Benefit</label>
+            @{ var answer = Model.PayingParent.RelevantBenefit == true ? "Yes" : "No"; }
+            <label class="question">Does the paying parent receive a relevant benefit:&nbsp;&nbsp; <span>@answer</span></label>
+        </div>
+        <hr />
+        @if (Model.PayingParent.RelevantBenefit && string.Equals(Model.RateBand, "F1", StringComparison.InvariantCultureIgnoreCase))
         {
-            <label class="question">@child.FirstName:&nbsp;&nbsp; <span>@child.PreExistingMaintenanceArrangementsAmount.ToString("C", CultureInfo.CurrentCulture)</span></label>
+            <div class="form-field">
+                <label class="receiving-parent-title">Nights Per Year Children Stay With Paying Parent</label>
+                @foreach (var child in children)
+                {
+                    <label class="question">@child.FirstName:&nbsp;&nbsp; <span>@child.NightsPayingParentCaresForChildPerYearLow.GetDescription()</span></label>
+                }
+            </div>
+            <hr />
         }
-    </div>
-    <hr />
-    <div class="form-field">
-        <label class="receiving-parent-title">Paying Parent's Benefit</label>
-        @{ var answer = Model.PayingParent.RelevantBenefit == true ? "Yes" : "No"; }
-        <label class="question">Does the paying parent receive a relevant benefit:&nbsp;&nbsp; <span>@answer</span></label>
-    </div>
-    <hr />
-    @if (Model.PayingParent.RelevantBenefit && string.Equals(Model.RateBand, "F1", StringComparison.InvariantCultureIgnoreCase))
-    {
+        @if (!Model.PayingParent.RelevantBenefit
+            && !string.Equals(Model.RateBand, "F1", StringComparison.InvariantCultureIgnoreCase)
+            && !string.Equals(Model.RateBand, "Nil", StringComparison.InvariantCultureIgnoreCase))
+        {
+            <div class="form-field">
+                <label class="receiving-parent-title">Nights Per Year Children Stay With Paying Parent</label>
+                @foreach (var child in children)
+                {
+                    <label class="question">@child.FirstName:&nbsp;&nbsp; <span>@child.NightsPayingParentCaresForChildPerYearHigh.GetDescription()</span></label>
+                }
+            </div>
+            <hr />
+        }
         <div class="form-field">
-            <label class="receiving-parent-title">Nights Per Year Children Stay With Paying Parent</label>
-            @foreach (var child in children)
-            {
-                <label class="question">@child.FirstName:&nbsp;&nbsp; <span>@child.NightsPayingParentCaresForChildPerYearLow.GetDescription()</span></label>
-            }
+            <label class="receiving-parent-title">Paying Parent's Income</label>
+            <label class="question">Annual income:&nbsp;&nbsp; <span>@Model.PayingParent.AnnualIncome.ToString("C", CultureInfo.CurrentCulture)</span></label>
+            <label class="question">Annual income:&nbsp;&nbsp; <span>@Model.PayingParent.AnnualPension.ToString("C", CultureInfo.CurrentCulture)</span></label>
         </div>
         <hr />
-    }
-    @if (!Model.PayingParent.RelevantBenefit
-         && !string.Equals(Model.RateBand, "F1", StringComparison.InvariantCultureIgnoreCase)
-         && !string.Equals(Model.RateBand, "Nil", StringComparison.InvariantCultureIgnoreCase))
-    {
         <div class="form-field">
-            <label class="receiving-parent-title">Nights Per Year Children Stay With Paying Parent</label>
-            @foreach (var child in children)
-            {
-                <label class="question">@child.FirstName:&nbsp;&nbsp; <span>@child.NightsPayingParentCaresForChildPerYearHigh.GetDescription()</span></label>
-            }
+            <label class="receiving-parent-title">Paying Parent's Other Children</label>
+            <label class="question">Number of other children the paying parent supports:&nbsp;&nbsp; <span>@Model.PayingParent.OtherSupportedChildren</span></label>
         </div>
-        <hr />
-    }
-    <div class="form-field">
-        <label class="receiving-parent-title">Paying Parent's Income</label>
-        <label class="question">Annual income:&nbsp;&nbsp; <span>@Model.PayingParent.AnnualIncome</span></label>
-        <label class="question">Annual income:&nbsp;&nbsp; <span>@Model.PayingParent.AnnualPension</span></label>
-    </div>
-    <hr />
-    <div class="form-field">
-        <label class="receiving-parent-title">Paying Parent's Other Children</label>
-        <label class="question">Number of other children the paying parent supports:&nbsp;&nbsp; <span>@Model.PayingParent.OtherSupportedChildren</span></label>
-    </div>
 
-</div>
+    </div>
 <hr />

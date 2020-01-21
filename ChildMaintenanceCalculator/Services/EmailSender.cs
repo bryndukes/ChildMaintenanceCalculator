@@ -4,12 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Rotativa.AspNetCore;
 
 namespace ChildMaintenanceCalculator.Services
 {
     public interface IEmailSenderService
     {
-        bool SendEmail(string body, string emailTo);
+        bool SendEmail(string body, string emailTo, Attachment attachment = null);
     }
 
     public class EmailSenderService : IEmailSenderService
@@ -23,7 +24,7 @@ namespace ChildMaintenanceCalculator.Services
         internal const string emailSubject = "Your Calculation";
 
         //TODO: Can this be made to return a success flag?
-        public bool SendEmail(string body, string emailTo)
+        public bool SendEmail(string body, string emailTo, Attachment attachment = null)
         {
             try
             {
@@ -39,6 +40,8 @@ namespace ChildMaintenanceCalculator.Services
                     mailMessage.Subject = emailSubject;
                     mailMessage.Body = body;
                     mailMessage.IsBodyHtml = true;
+                    if(attachment != null)
+                        mailMessage.Attachments.Add(attachment);
 
                     client.Send(mailMessage);
                     return true;

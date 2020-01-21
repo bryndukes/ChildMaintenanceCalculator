@@ -91,10 +91,10 @@
     $(document).ready(function() {
 
         $(document)
-            .ajaxStart(function () {
+            .ajaxStart(function() {
                 $spinner.show();
                 $("#sendEmail").attr("disabled", true);
-            })
+            });
 
         $("#emailResult").on('submit',
             function(event) {

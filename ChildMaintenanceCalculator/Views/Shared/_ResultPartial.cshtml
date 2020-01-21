@@ -108,12 +108,15 @@
 
                 }
             </div>
-            <hr class="darkline"/>
+            if(Model.PayingParent.ReceivingParents.IndexOf(receivingParent)+1 != Model.PayingParent.ReceivingParents.Count)
+            {
+                <hr class="darkline"/>
+            }
         }
     </div>
 </div>
 
-<hr />
+<hr class="pdf-hide"/>
 
 <div class="form-block">
     <label class="result-section-header">Total</label>
@@ -131,9 +134,8 @@
                 <td class="content-desktop"><label class="result-money-very-big content-desktop">@Model.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label></td>
             </tr>
         </table>
-        <hr class="darkline" />
     </div>
 
 </div>
 
-<hr />
+<hr class="pdf-hide"/>

@@ -12,156 +12,35 @@
 </head>
 <body>
     @using System.Globalization
+@using ExtensionMethods
     @model ChildMaintenanceCalculator.Models.ViewModels.EmailTemplateViewModel;
-
-<!--TODO: Config the message content-->
-<div>
-    <p>
-        Hi
-        @if (!String.IsNullOrWhiteSpace(Model.RecipientName))
-              {
-                 @Model.RecipientName
-              }
-        ,
-        <br/>
-        <br/>
-        Thank you for using the Child Maintenance Calculator.<br/>
-        Please find your calculation results below.<br/>
-    </p>
-</div>
-<br/>
-
-    <div class="form-block">
-        <label class="result-section-header">Total</label>
-
-        <table id="total-result-table" style="width: 100%">
-            <colgroup>
-                <col span="1" class="result-column-one">
-                <col span="1" class="result-column-two">
-            </colgroup>
-            <tr>
-                <td>
-                    <span class="result-label">Total child maintenance payable per week</span>
-                    <label class="result-money content-mobile-inline">@Model.Calculation.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label>
-                </td>
-                <td class="content-desktop"><label class="result-money content-desktop">@Model.Calculation.TotalMaintenancePayable.ToString("C", CultureInfo.CurrentCulture)</label></td>
-            </tr>
-        </table>
-
+    <!--TODO: Config the message content-->
+    <div>
+        <p>
+            Hi
+            @if (!String.IsNullOrWhiteSpace(Model.RecipientName))
+            {
+                @Model.RecipientName
+            }
+            ,
+            <br />
+            <br />
+            Thank you for using the Child Maintenance Calculator.<br />
+            Please find your calculation results below.<br />
+        </p>
     </div>
 
-    <hr />
 
-    <div class="form-block">
+    @Html.PartialFor(model => model.Calculation, "_ResultPartial")
 
-        <label class="result-section-header">Breakdown</label>
 
-        @foreach (var receivingParent in Model.Calculation.PayingParent.ReceivingParents)
-        {
-            <div class="form-field">
-
-                <label class="receiving-parent-title">@receivingParent.FirstName</label>
-                <br />
-
-                <div class="result-subsection">
-                    <table id="parent-result-table" style="width: 100%">
-                        <colgroup>
-                            <col span="1" class="result-column-one">
-                            <col span="1" class="result-column-two">
-                        </colgroup>
-                        <tr>
-                            <td>
-                                <span class="result-label">Total child maintenance to be paid to @receivingParent.FirstName per week</span>
-                                <label class="result-money content-mobile-inline">@receivingParent.MaintenanceEntitlementAmount.ToString("C", CultureInfo.CurrentCulture)</label>
-                            </td>
-                            <td class="content-desktop"><label class="result-money content-desktop">@receivingParent.MaintenanceEntitlementAmount.ToString("C", CultureInfo.CurrentCulture)</label></td>
-                        </tr>
-                    </table>
-                </div>
-
-                @foreach (var child in receivingParent.Children)
-                {
-                    var remainder = child.ChildMaintenanceAmount - child.PreExistingMaintenanceArrangementsAmount;
-
-                    <div class="result-subsection">
-
-                        <table id="child-result-table" style="width: 100%">
-                            <colgroup>
-                                <col span="1" class="result-column-one">
-                                <col span="1" class="result-column-two">
-                            </colgroup>
-                            <tr>
-                                <td>
-                                    <span class="result-label">Of which is for @child.FirstName</span>
-                                    <label class="result-money content-mobile-inline">@child.ChildMaintenanceAmount.ToString("C", CultureInfo.CurrentCulture)</label>
-                                </td>
-                                <td class="content-desktop"><label class="result-money content-desktop">@child.ChildMaintenanceAmount.ToString("C", CultureInfo.CurrentCulture)</label></td>
-                            </tr>
-                        </table>
-
-                        @if (child.PreExistingMaintenanceArrangements)
-                        {
-                            <div>
-
-                                <table id="preexisting-arrangements-result-table" style="width: 100%">
-                                    <colgroup>
-                                        <col span="1" class="result-column-one">
-                                        <col span="1" class="result-column-two">
-                                    </colgroup>
-                                    <tr>
-                                        <td>
-                                            <span class="result-subtext">&nbsp;&nbsp;Pre-existing arrangements</span>
-                                            <label class="result-submoney content-mobile-inline">@child.PreExistingMaintenanceArrangementsAmount.ToString("C", CultureInfo.CurrentCulture)</label>
-                                        </td>
-                                        <td class="content-desktop"><label class="result-submoney content-desktop">@child.PreExistingMaintenanceArrangementsAmount.ToString("C", CultureInfo.CurrentCulture)</label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="result-subtext">&nbsp;&nbsp;Remainder to pay</span>
-                                            @{
-                                                if (remainder <= 0)
-                                                {
-                                                    <label class="content-mobile-inline result-submoney">£0.00</label>
-                                                }
-                                                else
-                                                {
-                                                    <label class="content-mobile-inline result-submoney">@remainder.ToString("C", CultureInfo.CurrentCulture)</label>
-                                                }
-                                            }
-                                        </td>
-                                        <td class="content-desktop">
-                                            <!--ToDO: Dry this out-->
-                                            @{
-                                                if (remainder <= 0)
-                                                {
-                                                    <label class="content-desktop result-submoney">£0.00</label>
-                                                }
-                                                else
-                                                {
-                                                    <label class="content-desktop result-submoney">@remainder.ToString("C", CultureInfo.CurrentCulture)</label>
-                                                }
-                                            }
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </div>
-                        }
-
-                    </div>
-
-                }
-            </div>
-        }
-    </div>
-
-    <hr />
-    
-    
 <div>
     <p>
+        <br/>
         The calculator uses the Child Maintenance Services gross income formula (replacing the previous net income model used by the CSA). I really hope it helps in the discussions about the appropriate level of child maintenance.<br/>
         <br/>
+        You can view the questions and answers used to calculate these results in the attached PDF document.
+        <br />
         Feel free to use the calculator again if any circumstances change. It can be found here LINK TBA. <br/>
         <br/>
         Regards,<br/>
@@ -169,6 +48,6 @@
         Alan Larkin<br/>
         <strong>Head of Innovation & Technology, Family Law Partners</strong>
     </p>
-</div>
+    </div>
 </body>
 </html>

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ChildMaintenanceCalculator.Models;
@@ -23,11 +25,14 @@ namespace ChildMaintenanceCalculator.Controllers
         //TODO: Check if there are any other dependencies that can be injected
         private IViewRenderService viewRenderService;
         private IEmailSenderService emailSenderService;
+        private string pdfFooter;
 
         public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService)
         {
             this.viewRenderService = viewRenderService;
             this.emailSenderService = emailSenderService;
+            //TODO: Config this
+            this.pdfFooter = " --footer-center \"" + DateTime.Now.Date.ToString("MM/dd/yyyy") + "  Page: [page]/[toPage]\"" + " --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\"";
         }
 
         //TODO: COOKIE CONSENT
@@ -293,11 +298,36 @@ namespace ChildMaintenanceCalculator.Controllers
                 vm.RecipientName = model.User.FirstName;
             }
 
+            Attachment attachment = null;
+
+            try
+            {
+                var pdf = new ViewAsPdf("ResultPdfTemplate", calculation)
+                {
+                    PageSize = Size.A4,
+                    FileName = "ChildMaintenanceCalculationResult.pdf",
+                    CustomSwitches = pdfFooter
+                };
+
+                var task = pdf.BuildFile(ControllerContext);
+
+                var byteArray = task.Result;
+
+                var stream = new MemoryStream(byteArray);
+                attachment = new Attachment(stream, "ChildMaintenanceCalculationResult.pdf");
+            }
+            catch (Exception e)
+            {
+                //Log details of exception
+                //Result is no PDF attachment - shouldn't prevent email from sendign
+            }
+            
+
             var userEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
             if(String.IsNullOrEmpty(userEmailBody))
                 return Content("Unable to send emails. Please try again or use the PDF download option");
 
-            var userSuccess = emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress);
+            var userSuccess = emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress, attachment);
 
             var associateSuccess = true;
 
@@ -306,7 +336,7 @@ namespace ChildMaintenanceCalculator.Controllers
                 vm.RecipientName = string.IsNullOrWhiteSpace(contact.FirstName) ? string.Empty : contact.FirstName;
 
                 var assEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
-                associateSuccess = emailSenderService.SendEmail(assEmailBody, contact.EmailAddress);
+                associateSuccess = emailSenderService.SendEmail(assEmailBody, contact.EmailAddress, attachment);
             }
 
             if (userSuccess && associateSuccess)
@@ -320,13 +350,11 @@ namespace ChildMaintenanceCalculator.Controllers
         {
             var model = this.PeekModel();
 
-            string footer = " --footer-center \"" + DateTime.Now.Date.ToString("MM/dd/yyyy") + "  Page: [page]/[toPage]\"" + " --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\"";
-
             return new ViewAsPdf("ResultPdfTemplate", model)
             {
                 PageSize = Size.A4,
                 FileName = "ChildMaintenanceCalculationResult.pdf",
-                CustomSwitches = footer
+                CustomSwitches = pdfFooter
             };
         }
 
