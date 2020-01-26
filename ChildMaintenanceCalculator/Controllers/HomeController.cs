@@ -57,7 +57,8 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step1(Step1ViewModel vm)
         {
-            //Take Step1 View Model and validate
+            if (!ModelState.IsValid)
+                return View("Step1", vm);
 
             //Create a new Domain Model instance
             //TODO: Review where this should be - should it really be a class level private variable? Also could it be injected?
@@ -88,7 +89,6 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step1AddNewReceivingParent(int parentindex, int childindex)
         {
-
             //Create new item
             var newReceivingParent = new Step1ReceivingParent();
             //Add new parent index to ViewData so that it can be used in the partial to set parent ID
@@ -115,7 +115,6 @@ namespace ChildMaintenanceCalculator.Controllers
             return PartialView("_AddChildPartial", newChild);
         }
 
-
         //Step 2 - Does the paying parent receive a relevant benefit
         [HttpGet]
         public IActionResult Step2()
@@ -128,6 +127,9 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step2(Step2ViewModel vm)
         {
+            if (!ModelState.IsValid)
+                return View("Step2", vm);
+            
             //Get data from TempData into Calculation
             Calculation calculation = this.GetModel();
             // Add null error handling here
@@ -164,6 +166,9 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step3A(Step3AViewModel vm)
         {
+            if (!ModelState.IsValid)
+                return View("Step3A", vm);
+            
             Calculation calculation = this.GetModel();
 
             calculation.PayingParent.AnnualIncome = vm.PayingParentAnnualIncome ?? 0;
@@ -195,6 +200,9 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step3B(Step3BViewModel vm)
         {
+            if (!ModelState.IsValid)
+                return View("Step3B", vm);
+            
             Calculation calculation = this.GetModel();
 
             //Set the nights per year lower value for each child, using the child ID as the reference
@@ -325,7 +333,7 @@ namespace ChildMaintenanceCalculator.Controllers
 
             var userEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
             if(String.IsNullOrEmpty(userEmailBody))
-                return Content("Unable to send emails. Please try again or use the PDF download option");
+                return Content("Unable to send email(s). Please check the email address(es) entered are valid and try again or use the PDF download option");
 
             var userSuccess = emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress, attachment);
 
@@ -342,7 +350,7 @@ namespace ChildMaintenanceCalculator.Controllers
             if (userSuccess && associateSuccess)
                 return Content("Email(s) sent successfully");
 
-            return Content("Unable to send one or more of your emails. Please try again or use the PDF download option");
+            return Content("Unable to send one or more of your emails. Please check the email address(es) entered are valid and try again or use the PDF download option");
         }
 
         [HttpGet]

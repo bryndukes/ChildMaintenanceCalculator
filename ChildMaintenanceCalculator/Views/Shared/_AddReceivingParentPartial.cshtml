@@ -6,59 +6,57 @@
 
 @{
     string htmlFieldPrefix;
+    //TODO: Add null checking here
+    htmlFieldPrefix = Html.ViewData.TemplateInfo.HtmlFieldPrefix;
+    string receivingParentIndex = ViewData.ContainsKey("receivingParentIndex") ? ViewData["receivingParentIndex"].ToString() : "0";
+    int receivingParentId = int.Parse(receivingParentIndex) + 1;
+    string receivingParentHtmlId = $"ReceivingParent[{receivingParentIndex}]";
 }
 
-    @{
-        using (Html.BeginCollectionItem("Step1ReceivingParents"))
-        {
-            //TODO: Add null checking here
-            htmlFieldPrefix = Html.ViewData.TemplateInfo.HtmlFieldPrefix;
-            string receivingParentIndex = ViewData.ContainsKey("receivingParentIndex") ? ViewData["receivingParentIndex"].ToString() : "0";
-            int receivingParentId = int.Parse(receivingParentIndex) + 1;
-            string receivingParentHtmlId = $"ReceivingParent[{receivingParentIndex}]";
+    <div id="@($"addReceivingParent{receivingParentId}")" class="add-receiving-parent-div form-block">
 
-            <div id="@($"addReceivingParent{receivingParentId}")" class="add-receiving-parent-div form-block">
-                
-                @{
-                    if (receivingParentId > 1)
-                    {
-                        <hr/>
-                    }
-                }
-                
-                <div>
-                    <label class="receiving-parent-title">Receiving Parent @(receivingParentId)</label>
-                    <input asp-for="Id" type="hidden" value="@receivingParentId" />
-                </div>
+        @{
+            using (Html.BeginCollectionItem("Step1ReceivingParents"))
+            {
 
-                <div class="form-field">
-                    <label class="form-label">What is the receiving parent's first name?</label>
                     <div>
-                        <input asp-for="FirstName" />
+                        <label class="receiving-parent-title">Receiving Parent @(receivingParentId)</label>
+                        <input asp-for="Id" type="hidden" value="@receivingParentId" />
                     </div>
-                </div>
 
-                <div id="@($"addChildrenList{receivingParentId}")">
-                    @{
-                        //If the parent partial has been created by ajax request, then the new childIndex will have been passed from the controller and should be used from here
-                        //If the parent partial is for the first parent, then the child index is 0
-                        int childIndex = ViewData["firstChildIndex"] != null ? (int)ViewData["firstChildIndex"] : 0;
-                        foreach (Step1Child child in Model.Step1Children)
-                        {
-                            <div>
-                                @Html.PartialFor(model => child, "_AddChildPartial")
-                            </div>
-                            childIndex++;
+                    <div class="receiving-parent-field">
+                        <label class="form-label">What is the receiving parent's first name?</label>
+                        <div>
+                            <input asp-for="FirstName" />
+                            <span asp-validation-for="FirstName"></span>
+                        </div>
+                    </div>
+
+                    <div id="@($"addChildrenList{receivingParentId}")">
+                        @{
+                            //If the parent partial has been created by ajax request, then the new childIndex will have been passed from the controller and should be used from here
+                            //If the parent partial is for the first parent, then the child index is 0
+                            int childIndex = ViewData["firstChildIndex"] != null ? (int)ViewData["firstChildIndex"] : 0;
+                            foreach (Step1Child child in Model.Step1Children)
+                            {
+                                <div>
+                                    @Html.PartialFor(model => child, "_AddChildPartial")
+                                </div>
+                                childIndex++;
+                            }
                         }
-                    }
-                </div>
+                    </div>
+                    <span asp-validation-for="Step1Children"></span>
 
-                <input type="button" id="addChildButton" class="addChildButton form-add-button" value="Add Child" data-addchildbtnid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
-            </div>
+                    <input type="button" id="addChildButton" class="addChildButton form-control-button add" value="Add Child" data-addchildbtnid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
+                    <input type="button" id="removeParentButton" class="removeParentButton form-control-button remove" value="Delete Parent" data-parentid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
 
+                    <hr />
 
-        }
-    }
+                }
+            }
+    </div>
+
 
 
 

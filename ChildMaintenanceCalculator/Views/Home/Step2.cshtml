@@ -65,6 +65,9 @@
                         @Html.RadioButtonFor(m => m.PayingParentReceivesBenefit, true) Yes
                         @Html.RadioButtonFor(m => m.PayingParentReceivesBenefit, false) No
                     </div>
+                    <div>
+                        <span asp-validation-for="PayingParentReceivesBenefit"></span>
+                    </div>
                 </div>
             </div>
             

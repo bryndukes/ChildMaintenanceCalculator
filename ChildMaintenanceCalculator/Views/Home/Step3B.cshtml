@@ -36,11 +36,16 @@
                                 </div>
                                 
                                 <div>
-                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, Child.SharedCare.LessThan52)
+                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, Child.SharedCare.LessThan52,
+                                        new { @checked = Model.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow == Child.SharedCare.LessThan52 ? "checked" : string.Empty })
                                     @Child.SharedCare.LessThan52.GetDescription()
                                     <br />
-                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, Child.SharedCare.MoreThanOrEqualTo52)
+                                    @Html.RadioButtonFor(m => m.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow, Child.SharedCare.MoreThanOrEqualTo52,
+                                        new {@checked = Model.Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow == Child.SharedCare.MoreThanOrEqualTo52 ? "checked" : string.Empty})
                                     @Child.SharedCare.MoreThanOrEqualTo52.GetDescription()
+                                </div>
+                                <div>
+                                    <span asp-validation-for="Step3BChildren[childIndex].NightsPayingParentCaresForChildPerYearLow"></span>
                                 </div>
                             </div>
                             

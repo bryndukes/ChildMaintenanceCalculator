@@ -6,6 +6,10 @@
 .content-desktop-inline {display: inline-block;}
 .content-mobile-inline {display: none;}
 
+html {
+    overflow-y: scroll;
+}
+
 .custom-body {
     padding-top: 50px;
     padding-bottom: 20px;
@@ -61,6 +65,10 @@
     margin-top: 1.313em;
 }
 
+.child-block {
+    margin-top: 1em;
+}
+
 .form-next-button {
     background-color: #f7941d;
     color: #fff;
@@ -73,17 +81,26 @@
     margin-top: 1.313em;
 }
 
-.form-add-button {
-    background-color: #33cc33;
+.form-control-button {
     color: #fff;
     text-shadow: 0 0.075em 0.075em rgba(0,0,0,0.5);
     line-height: 1.3;
     text-align: center;
     vertical-align: middle;
-    width: 120px;
     padding: 0.513em 1em 0.513em;
     border: none;
     margin-top: 1.313em;
+    margin-right: 15px;
+}
+
+.add {
+    background-color: #33cc33;
+    width: 120px;
+}
+
+.remove {
+    background-color: #ff5757;
+    width: 130px;
 }
 
 .remove-button-div {
@@ -112,6 +129,10 @@
 
 .form-field {
     margin-bottom: 1.313em;
+}
+
+.receiving-parent-field {
+    margin-bottom: 5px;
 }
 
 .receiving-parent-title {
@@ -422,6 +443,15 @@ input[type="number"] {
 
 .darkline {
     border-color: #cccccc;
+}
+
+.field-validation-error {
+    margin-left: 5px;
+    color: #ff5757;
+}
+
+.horizontal-field-validation {
+    margin: 0 !important;
 }
 
 @media screen and (max-width: 768px) {

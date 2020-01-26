@@ -49,18 +49,16 @@
 
                         foreach (Step1ReceivingParent receivingParent in Model.Step1ReceivingParents)
                         {
-                            Html.PartialFor(model => receivingParent, "_AddReceivingParentPartial");
-                            //TODO: Both these partial render lines lead to dodgy ID numbers on the children
-                            //@await Html.PartialAsync("_AddReceivingParentPartial", receivingParent);
+                            Html.RenderPartial("_AddReceivingParentPartial", receivingParent);
                             receivingParentIndex++;
                         }
                     }
                 </div>
+                <span asp-validation-for="Step1ReceivingParents"></span>
 
-                <input type="button" id="addReceivingParentButton" value="Add Parent" class="form-add-button" />
-                <br/>
+                <input type="button" id="addReceivingParentButton" value="Add Parent" class="form-control-button add" />
+                <br />
                 <button type="submit" class="form-next-button">Next</button>
-                @*//TODO: REMOVE BUTTON*@
             </form>
             
             <!--TODO: Sort out all the document readys-->
@@ -122,6 +120,17 @@
                         var childDivId = $(this).closest(".add-child-div").attr('id');
                         var targetChild = $("#" + childDivId);
                         $(targetChild).slideUp("normal", function() { $(this).remove(); } );
+                    });
+
+                });
+
+                $(document).ready(function () {
+
+                    $(document).on('click', ".removeParentButton", function (evt) {
+                        event.preventDefault();
+                        var parentDivId = $(this).closest(".add-receiving-parent-div").attr('id');
+                        var targetParent = $("#" + parentDivId);
+                        $(targetParent).slideUp("normal", function() { $(this).remove(); } );
                     });
 
                 });

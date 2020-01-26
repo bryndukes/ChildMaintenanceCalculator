@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,9 +28,12 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
         {
             Id = id;
             FirstName = fName;
+            NightsPayingParentCaresForChildPerYearLow = Child.SharedCare.LessThan52;
         }
         public int Id { get; set; }
         public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Please make a selection")]
         public Child.SharedCare NightsPayingParentCaresForChildPerYearLow { get; set; }
     }   
 }
