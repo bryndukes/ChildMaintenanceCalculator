@@ -10,11 +10,11 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
     {
         [Display(Prompt = "0.00")]
         [Required(ErrorMessage = "Please enter an income amount")]
-        [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid amount")] 
+        [RegularExpression("^\\-?[0-9]+(?:\\.[0-9]{1,2})?$", ErrorMessage = "Please enter valid amount")] 
         public decimal? PayingParentAnnualIncome { get; set; }
 
         [Display(Prompt = "0.00")]
-        [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid amount")] 
+        [RegularExpression("^\\-?[0-9]+(?:\\.[0-9]{1,2})?$", ErrorMessage = "Please enter valid amount")] 
         public decimal? PayingParentAnnualPension { get; set; }
     }
 }

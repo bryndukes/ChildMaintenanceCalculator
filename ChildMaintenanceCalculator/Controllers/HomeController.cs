@@ -306,7 +306,7 @@ namespace ChildMaintenanceCalculator.Controllers
                 vm.RecipientName = model.User.FirstName;
             }
 
-            Attachment attachment = null;
+            var byteArray = new byte[0];
 
             try
             {
@@ -319,23 +319,24 @@ namespace ChildMaintenanceCalculator.Controllers
 
                 var task = pdf.BuildFile(ControllerContext);
 
-                var byteArray = task.Result;
-
-                var stream = new MemoryStream(byteArray);
-                attachment = new Attachment(stream, "ChildMaintenanceCalculationResult.pdf");
+                byteArray = task.Result;
             }
             catch (Exception e)
             {
                 //Log details of exception
                 //Result is no PDF attachment - shouldn't prevent email from sendign
             }
-            
 
             var userEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
+
+            var userStream = new MemoryStream(byteArray);
+            var userAttachment = new Attachment(userStream, "ChildMaintenanceCalculationResult.pdf");
+
             if(String.IsNullOrEmpty(userEmailBody))
                 return Content("Unable to send email(s). Please check the email address(es) entered are valid and try again or use the PDF download option");
 
-            var userSuccess = emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress, attachment);
+            var userSuccess = emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress, userAttachment);
+            userStream.Close();
 
             var associateSuccess = true;
 
@@ -344,7 +345,12 @@ namespace ChildMaintenanceCalculator.Controllers
                 vm.RecipientName = string.IsNullOrWhiteSpace(contact.FirstName) ? string.Empty : contact.FirstName;
 
                 var assEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
-                associateSuccess = emailSenderService.SendEmail(assEmailBody, contact.EmailAddress, attachment);
+
+                var assStream = new MemoryStream(byteArray);
+                var assAttachment = new Attachment(assStream, "ChildMaintenanceCalculationResult.pdf");
+
+                associateSuccess = emailSenderService.SendEmail(assEmailBody, contact.EmailAddress, assAttachment);
+                assStream.Close();
             }
 
             if (userSuccess && associateSuccess)
