@@ -10,7 +10,9 @@ using ChildMaintenanceCalculator.Models;
 using ChildMaintenanceCalculator.Models.ViewModels;
 using ChildMaintenanceCalculator.Services;
 using ExtensionMethods;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Logging;
 using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
 
@@ -26,11 +28,15 @@ namespace ChildMaintenanceCalculator.Controllers
         private IViewRenderService viewRenderService;
         private IEmailSenderService emailSenderService;
         private string pdfFooter;
+        private readonly ILogger _logger; 
 
-        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService)
+
+        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService,ILogger<HomeController> logger)
         {
             this.viewRenderService = viewRenderService;
             this.emailSenderService = emailSenderService;
+            this._logger = logger;
+
             //TODO: Config this
             this.pdfFooter = " --footer-center \"" + DateTime.Now.Date.ToString("MM/dd/yyyy") + "  Page: [page]/[toPage]\"" + " --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\"";
         }
@@ -375,7 +381,18 @@ namespace ChildMaintenanceCalculator.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+            if (exceptionFeature != null)
+            {
+                string routeWhereExceptionOccurred = exceptionFeature.Path;
+
+                Exception exception = exceptionFeature.Error;
+
+                _logger.LogError($"{nameof(exception)}: {exception.Message}.");
+            }
+
+            return View();
         }
     }
 }
