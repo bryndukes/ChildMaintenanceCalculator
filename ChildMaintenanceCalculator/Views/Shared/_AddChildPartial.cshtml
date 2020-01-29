@@ -39,6 +39,10 @@
                     <div class="input-div">
                         @Html.RadioButtonFor(m => m.PreExistingArrangements, true, new {@checked = Model.PreExistingArrangements ? "checked" : string.Empty, OnChange = $"preExistingArrangementsChanged(true, {childId})"}) Yes
                         @Html.RadioButtonFor(m => m.PreExistingArrangements, false, new {@checked = Model.PreExistingArrangements ? string.Empty : "checked", OnChange = $"preExistingArrangementsChanged(false, {childId});"}) No
+                        <div class="hint">
+                            <i class="fa fa-info-circle"></i>
+                            <span class="hint-text">If you are already making or receiving child maintenance payments for this child, you may enter the amount of these payments here to have the remainder to pay calculated and shown in the results</span>
+                        </div>
                     </div>
                     <div>
                         <span asp-validation-for="PreExistingArrangements"></span>

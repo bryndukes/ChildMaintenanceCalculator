@@ -21,17 +21,25 @@
         <form id="step3A" asp-controller="Home" asp-action="Step3A" method="post">
 
             <div class="form-block">
-                <label class="form-label">Paying parent's annual income</label>
+                <label class="form-label">Paying parent's gross annual income</label>
                 <div>
                     <span class="currency-label">£</span><input asp-for="@Model.PayingParentAnnualIncome" />
+                    <div class="hint">
+                        <i class="fa fa-info-circle"></i>
+                        <span class="hint-text">This is the paying parents annual income before Income Tax and National Insurance are taken off, but after occupational or personal pension scheme contributions are taken away</span>
+                    </div>
                     <span asp-validation-for="PayingParentAnnualIncome"></span>
                 </div>
             </div>
             
             <div class="form-block">
-                <label class="form-label">Paying parent's annual pension</label>
+                <label class="form-label">Paying parent's annual contributions</label>
                 <div>
                     <span class="currency-label">£</span><input asp-for="@Model.PayingParentAnnualPension" />
+                    <div class="hint">
+                        <i class="fa fa-info-circle"></i>
+                        <span class="hint-text">This is the paying parents annual contributions to any private pension schemes</span>
+                    </div>
                     <span asp-validation-for="PayingParentAnnualPension"></span>
                 </div>
             </div>

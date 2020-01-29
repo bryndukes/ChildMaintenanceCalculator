@@ -24,15 +24,19 @@
                         <input asp-for="Id" type="hidden" value="@receivingParentId" />
                     </div>
 
-                    <div class="receiving-parent-field">
-                        <label class="form-label">What is the receiving parent's first name?</label>
-                        <div>
-                            <input asp-for="FirstName" />
-                            <span asp-validation-for="FirstName"></span>
+                <div class="receiving-parent-field">
+                    <label class="form-label">What is the receiving parent's first name?</label>
+                    <div>
+                        <input asp-for="FirstName" />
+                        <div class="hint">
+                            <i class="fa fa-info-circle"></i>
+                            <span class="hint-text">Names are only required to identify the amount payable to each parent and child in the results</span>
                         </div>
+                        <span asp-validation-for="FirstName"></span>
                     </div>
+                </div>
 
-                    <div id="@($"addChildrenList{receivingParentId}")">
+                <div id="@($"addChildrenList{receivingParentId}")">
                         @{
                             //If the parent partial has been created by ajax request, then the new childIndex will have been passed from the controller and should be used from here
                             //If the parent partial is for the first parent, then the child index is 0
@@ -48,8 +52,10 @@
                     </div>
                     <span asp-validation-for="Step1Children"></span>
 
-                    <input type="button" id="addChildButton" class="addChildButton form-control-button add" value="Add Child" data-addchildbtnid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
-                    <input type="button" id="removeParentButton" class="removeParentButton form-control-button remove" value="Delete Parent" data-parentid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
+                    <div class="parent-buttons">
+                        <input type="button" id="addChildButton" class="addChildButton form-control-button add" value="Add Child" data-addchildbtnid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
+                        <input type="button" id="removeParentButton" class="removeParentButton form-control-button remove" value="Delete Parent" data-parentid="@receivingParentId" data-htmlfieldprefix="@htmlFieldPrefix" />
+                    </div>
 
                     <hr />
 
