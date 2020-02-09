@@ -27,7 +27,6 @@ namespace ExtensionMethods
         public static Calculation GetModel(this Controller instance)
         {
             string modelString = instance.TempData["model"] as String;
-            //TODO: Add null error handling
 
             Calculation model = JsonConvert.DeserializeObject<Calculation>(modelString);
 
@@ -38,7 +37,6 @@ namespace ExtensionMethods
         public static Calculation PeekModel(this Controller instance)
         {
             string modelString = instance.TempData.Peek("model") as String;
-            //TODO: Add null error handling
 
             Calculation model = JsonConvert.DeserializeObject<Calculation>(modelString);
 

@@ -8,8 +8,6 @@ using ChildMaintenanceCalculator.Attributes;
 
 namespace ChildMaintenanceCalculator.Models.ViewModels
 {
-    //TODO: Update all properties to have the name on the Display Attrbiute, and use label for in the view!
-    
     public class Step1ViewModel
     {
         public Step1ViewModel()

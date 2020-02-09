@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Mail;
 using ChildMaintenanceCalculator.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ChildMaintenanceCalculator.Services
@@ -14,6 +15,7 @@ namespace ChildMaintenanceCalculator.Services
     public class EmailSenderService : IEmailSenderService
     {
         private EmailSettings _settings;
+        private ILogger _logger;
         
         private readonly string _smtpServer;
         private readonly int _smtpPort;
@@ -22,8 +24,9 @@ namespace ChildMaintenanceCalculator.Services
         private readonly string _emailFrom;
         private readonly string _emailSubject;
 
-        public EmailSenderService(IOptions<EmailSettings> emailSettings)
+        public EmailSenderService(IOptions<EmailSettings> emailSettings, ILogger<EmailSenderService> logger)
         {
+            this._logger = logger;
             this._settings = emailSettings.Value;
             this._smtpServer = _settings.SmtpServer;
             this._smtpPort = _settings.SmtpPort;
@@ -34,7 +37,6 @@ namespace ChildMaintenanceCalculator.Services
 
         }
 
-        //TODO: Can this be made to return a success flag?
         public bool SendEmail(string body, string emailTo, Attachment attachment = null)
         {
             try
@@ -60,7 +62,7 @@ namespace ChildMaintenanceCalculator.Services
             }
             catch (Exception e)
             {
-                //TODO: Log exception Details
+                _logger.LogError($"Error sending email:  {nameof(e)}: {e.Message}.");
                 return false;
             }
 

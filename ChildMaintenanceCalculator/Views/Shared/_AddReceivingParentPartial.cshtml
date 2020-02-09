@@ -6,7 +6,6 @@
 
 @{
     string htmlFieldPrefix;
-    //TODO: Add null checking here
     htmlFieldPrefix = Html.ViewData.TemplateInfo.HtmlFieldPrefix;
     string receivingParentIndex = ViewData.ContainsKey("receivingParentIndex") ? ViewData["receivingParentIndex"].ToString() : "0";
     int receivingParentId = int.Parse(receivingParentIndex) + 1;

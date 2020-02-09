@@ -23,28 +23,22 @@ namespace ChildMaintenanceCalculator.Controllers
     {
         private readonly IViewRenderService _viewRenderService;
         private readonly IEmailSenderService _emailSenderService;
-        private string _pdfFooter;
         private readonly ILogger _logger;
-        private IConfiguration _config;
+        private string _pdfFooter;
 
-        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService,ILogger<HomeController> logger, IConfiguration config)
+        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService, ILogger<HomeController> logger)
         {
             this._viewRenderService = viewRenderService;
             this._emailSenderService = emailSenderService;
             this._logger = logger;
-            this._config = config;
 
             this._pdfFooter = " --footer-center \"" + DateTime.Now.Date.ToString("MM/dd/yyyy") + "  Page: [page]/[toPage]\"" + " --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\"";
         }
-
-        //TODO: COOKIE CONSENT
 
         public IActionResult Index()
         {
             return View();
         }
-
-        //TODO: Remove comments from here, but add proper API comments
 
         //Step 1 - Add receiving parents and children
         [HttpGet]
@@ -62,11 +56,8 @@ namespace ChildMaintenanceCalculator.Controllers
             if (!ModelState.IsValid)
                 return View("Step1", vm);
 
-            //Create a new Domain Model instance
-            //TODO: Review where this should be - should it really be a class level private variable? Also could it be injected?
             Calculation calculation = new Calculation();
 
-            //Map data from view model to domain model - This needs to be separated into a mapper class or use AutoMapper
             calculation.PayingParent.ReceivingParents = vm.Step1ReceivingParents.Select(r => new ReceivingParent
             {
                 Id = r.Id,
@@ -80,10 +71,9 @@ namespace ChildMaintenanceCalculator.Controllers
                 }).ToList()
             }).ToList();
 
-            //Store the Domin Model in Temp Data
+            //Store the Domin Model in Temp Data for persistence between steps
             this.StoreModel(calculation);
 
-            //Work out which step should be shown next and redirect to the Get Action for that step
             return RedirectToAction("Step2");
 
         }
@@ -91,29 +81,24 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step1AddNewReceivingParent(int parentindex, int childindex)
         {
-            //Create new item
             var newReceivingParent = new Step1ReceivingParent();
             //Add new parent index to ViewData so that it can be used in the partial to set parent ID
             ViewData["receivingParentIndex"] = parentindex;
             ViewData["childIndex"] = childindex;
             ViewData["firstChild"] = true;
 
-            //Return partial to be appended to view
             return PartialView("_AddReceivingParentPartial", newReceivingParent);
         }
 
         [HttpPost]
         public IActionResult Step1AddNewChild(int index, string parentHtmlFieldPrefix)
         {
-
-            //Create new item
             var newChild = new Step1Child();
             //Add new child index to ViewData so that it can be used in the partial to set child ID
             ViewData["childIndex"] = index;
             ViewData["firstChild"] = false;
             ViewData.TemplateInfo.HtmlFieldPrefix = parentHtmlFieldPrefix;
 
-            //Return partial to be appended to view
             return PartialView("_AddChildPartial", newChild);
         }
 
@@ -132,17 +117,11 @@ namespace ChildMaintenanceCalculator.Controllers
             if (!ModelState.IsValid)
                 return View("Step2", vm);
             
-            //Get data from TempData into Calculation
+            //Retrieve calculation data from tempData, update with data from step 2 and store in tempData again
             Calculation calculation = this.GetModel();
-            // Add null error handling here
-
-            //Add data from view model into Calculation
             calculation.PayingParent.RelevantBenefit = vm.PayingParentReceivesBenefit;
-
-            //Put the Calculation back into TempData
             this.StoreModel(calculation);
 
-            //Decide which step to go to next
             if(calculation.PayingParent.RelevantBenefit == false)
             {
                 return RedirectToAction("Step3A");
@@ -194,7 +173,13 @@ namespace ChildMaintenanceCalculator.Controllers
         public IActionResult Step3B()
         {
             //Get all the children from the domain model into a list of children to pass in to the Step3BViewModel
-            List<Step3BChild> children = this.PeekModel().PayingParent.ReceivingParents.Where(r => r.Children.Any()).SelectMany(r => r.Children).Select(c => new Step3BChild(c.Id, c.FirstName)).ToList();
+            List<Step3BChild> children = 
+                this.PeekModel().PayingParent.ReceivingParents
+                .Where(r => r.Children.Any())
+                .SelectMany(r => r.Children)
+                .Select(c => new Step3BChild(c.Id, c.FirstName))
+                .ToList();
+
             Step3BViewModel viewModel = new Step3BViewModel(children);
             return View("Step3B", viewModel);
         }
@@ -208,11 +193,12 @@ namespace ChildMaintenanceCalculator.Controllers
             Calculation calculation = this.GetModel();
 
             //Set the nights per year lower value for each child, using the child ID as the reference
-            foreach(ReceivingParent receivingParent in calculation.PayingParent.ReceivingParents) //TODO:Improve this with Linq
+            foreach(ReceivingParent receivingParent in calculation.PayingParent.ReceivingParents)
             {
                 foreach(Child child in receivingParent.Children)
                 {
-                    child.NightsPayingParentCaresForChildPerYearLow = vm.Step3BChildren.First(c => c.Id == child.Id).NightsPayingParentCaresForChildPerYearLow;
+                    child.NightsPayingParentCaresForChildPerYearLow = vm.Step3BChildren
+                        .First(c => c.Id == child.Id).NightsPayingParentCaresForChildPerYearLow;
                 }
             }
 
@@ -224,7 +210,12 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpGet]
         public IActionResult Step4()
         {
-            List<Step4Child> children = this.PeekModel().PayingParent.ReceivingParents.Where(r => r.Children.Any()).SelectMany(r => r.Children).Select(c => new Step4Child(c.Id, c.FirstName)).ToList();
+            List<Step4Child> children = 
+                this.PeekModel().PayingParent.ReceivingParents
+                    .Where(r => r.Children.Any())
+                    .SelectMany(r => r.Children)
+                    .Select(c => new Step4Child(c.Id, c.FirstName)).ToList();
+
             Step4ViewModel viewModel = new Step4ViewModel(children);
             return View("Step4", viewModel);
         }
@@ -234,11 +225,12 @@ namespace ChildMaintenanceCalculator.Controllers
         {
             Calculation calculation = this.GetModel();
 
-            foreach (ReceivingParent receivingParent in calculation.PayingParent.ReceivingParents) //TODO:Improve this with Linq
+            foreach (ReceivingParent receivingParent in calculation.PayingParent.ReceivingParents)
             {
                 foreach (Child child in receivingParent.Children)
                 {
-                    child.NightsPayingParentCaresForChildPerYearHigh = vm.Step4Children.First(c => c.Id == child.Id).NightsPayingParentCaresForChildPerYearHigh;
+                    child.NightsPayingParentCaresForChildPerYearHigh = vm.Step4Children
+                        .First(c => c.Id == child.Id).NightsPayingParentCaresForChildPerYearHigh;
                 }
             }
 
@@ -259,9 +251,7 @@ namespace ChildMaintenanceCalculator.Controllers
         public IActionResult Step5(Step5ViewModel vm)
         {
             var calculation = this.GetModel();
-
             calculation.PayingParent.OtherSupportedChildren = vm.OtherSupportedChildren;
-
             this.StoreModel(calculation);
 
             return RedirectToAction("Result");
@@ -271,9 +261,7 @@ namespace ChildMaintenanceCalculator.Controllers
         public IActionResult Result()
         {
             var calculation = this.GetModel();
-
             calculation.Calculate();
-
             this.StoreModel(calculation);
 
             return View("Result", calculation);
@@ -289,12 +277,6 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public async Task<ContentResult> EmailResult(EmailViewModel model)
         {
-            if (String.IsNullOrWhiteSpace(model.User.EmailAddress))
-            {
-                //TODO:Handle this error somehow?
-                //Validation should be added to the model property so that will be handled by that, so this would probably be an unexpected exception?
-            }
-
             var calculation = this.PeekModel();
             var contextAccessor = new ActionContextAccessor();
             contextAccessor.ActionContext = ControllerContext;
@@ -327,8 +309,7 @@ namespace ChildMaintenanceCalculator.Controllers
             }
             catch (Exception e)
             {
-                //Log details of exception
-                //Result is no PDF attachment - shouldn't prevent email from sendign
+                _logger.LogError($"Unable to render PDF: {nameof(e)}: {e.Message}.");
             }
 
             var userEmailBody = await _viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);

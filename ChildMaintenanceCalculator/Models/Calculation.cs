@@ -7,13 +7,10 @@ namespace ChildMaintenanceCalculator.Models
 {
     public class Calculation
     {
-        //TODO: Set up all models to use Dependency Injection?
-        //TODO: Encapsulate the properties of this class is possible? or do you not do that with MVC models?
         private decimal _totalMaintenancePayable;
 
-
         public PayingParent PayingParent = new PayingParent();
-        public string RateBand { get; set; } //TODO:Should this be a class/Enum?
+        public string RateBand { get; set; }
         public decimal TotalMaintenancePayable
         {
             get { return Math.Round(_totalMaintenancePayable, 2); }
@@ -28,7 +25,7 @@ namespace ChildMaintenanceCalculator.Models
         //Calculates the total child maintenance amount payable for each child individually
         public void Calculate()
         {
-            var totalChildren = PayingParent.ReceivingParents.SelectMany(p => p.Children).Count(); // TODO: Should this be a property on PP?
+            var totalChildren = PayingParent.ReceivingParents.SelectMany(p => p.Children).Count();
 
             if (PayingParent.RelevantBenefit == true)
             {
@@ -40,16 +37,18 @@ namespace ChildMaintenanceCalculator.Models
                 {
                     if (receivingParent.Children.Any(c => c.NightsPayingParentCaresForChildPerYearLow == Child.SharedCare.MoreThanOrEqualTo52))
                     {
-                        foreach(var child in receivingParent.Children) //TODO: Linq this
+                        foreach(var child in receivingParent.Children)
                         {
                             child.ChildMaintenanceAmount = 0;
                         }
                     }
                     else
                     {
-                        foreach( var child in receivingParent.Children) //TODO: Linq this
+                        foreach( var child in receivingParent.Children)
                         {
-                            child.ChildMaintenanceAmount = decimal.Divide(7, PayingParent.ReceivingParents.SelectMany(r => r.Children).Count());
+                            child.ChildMaintenanceAmount = 
+                                decimal.Divide(7, PayingParent.ReceivingParents
+                                .SelectMany(r => r.Children).Count());
                         }
                     }
                 }
@@ -79,7 +78,7 @@ namespace ChildMaintenanceCalculator.Models
                     {
                         if (PayingParent.OtherSupportedChildren == 0)
                         {
-                            RateBand = "R1"; //TODO: Make this an Enum
+                            RateBand = "R1";
 
                             //Calculate Child Maintenance Amount with percentage param for R1 - 17%
                             CalculateMaintenanceAmountReduced(17);
@@ -205,8 +204,6 @@ namespace ChildMaintenanceCalculator.Models
                             CalculateMaintenanceAmountBasicPlus(19, 15);
                         }
                     }
-                    
-                    //TODO: Decide if we should handle the over £3000 scenario someehow?
 
                 }
 
