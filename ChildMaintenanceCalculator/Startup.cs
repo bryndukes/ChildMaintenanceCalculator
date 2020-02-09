@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ChildMaintenanceCalculator.Configuration;
 using ChildMaintenanceCalculator.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,11 +37,12 @@ namespace ChildMaintenanceCalculator
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.Configure<EmailSettings>(
+                options => Configuration.GetSection("EmailSettings").Bind(options));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddScoped<IViewRenderService, ViewRenderService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
-            //TODO: Register any other dependencies here
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

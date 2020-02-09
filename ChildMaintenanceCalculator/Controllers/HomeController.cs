@@ -12,6 +12,7 @@ using ChildMaintenanceCalculator.Services;
 using ExtensionMethods;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
@@ -20,25 +21,20 @@ namespace ChildMaintenanceCalculator.Controllers
 {
     public class HomeController : Controller
     {
-        //Each step in the form has an individual view and view model. When that step of the form is submitted with the 'next' button,
-        // will be bound to the view model. The data from the view model will then be transferred to the domain model.
-        // The domain model will then be stored in TempData, and the post action will redirect to the get action for the next step.
+        private readonly IViewRenderService _viewRenderService;
+        private readonly IEmailSenderService _emailSenderService;
+        private string _pdfFooter;
+        private readonly ILogger _logger;
+        private IConfiguration _config;
 
-        //TODO: Check if there are any other dependencies that can be injected
-        private IViewRenderService viewRenderService;
-        private IEmailSenderService emailSenderService;
-        private string pdfFooter;
-        private readonly ILogger _logger; 
-
-
-        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService,ILogger<HomeController> logger)
+        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService,ILogger<HomeController> logger, IConfiguration config)
         {
-            this.viewRenderService = viewRenderService;
-            this.emailSenderService = emailSenderService;
+            this._viewRenderService = viewRenderService;
+            this._emailSenderService = emailSenderService;
             this._logger = logger;
+            this._config = config;
 
-            //TODO: Config this
-            this.pdfFooter = " --footer-center \"" + DateTime.Now.Date.ToString("MM/dd/yyyy") + "  Page: [page]/[toPage]\"" + " --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\"";
+            this._pdfFooter = " --footer-center \"" + DateTime.Now.Date.ToString("MM/dd/yyyy") + "  Page: [page]/[toPage]\"" + " --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\"";
         }
 
         //TODO: COOKIE CONSENT
@@ -320,7 +316,7 @@ namespace ChildMaintenanceCalculator.Controllers
                 {
                     PageSize = Size.A4,
                     FileName = "ChildMaintenanceCalculationResult.pdf",
-                    CustomSwitches = pdfFooter
+                    CustomSwitches = _pdfFooter
                 };
 
                 var task = pdf.BuildFile(ControllerContext);
@@ -333,7 +329,7 @@ namespace ChildMaintenanceCalculator.Controllers
                 //Result is no PDF attachment - shouldn't prevent email from sendign
             }
 
-            var userEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
+            var userEmailBody = await _viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
 
             var userStream = new MemoryStream(byteArray);
             var userAttachment = new Attachment(userStream, "ChildMaintenanceCalculationResult.pdf");
@@ -341,7 +337,7 @@ namespace ChildMaintenanceCalculator.Controllers
             if(String.IsNullOrEmpty(userEmailBody))
                 return Content("Unable to send email(s). Please check the email address(es) entered are valid and try again or use the PDF download option");
 
-            var userSuccess = emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress, userAttachment);
+            var userSuccess = _emailSenderService.SendEmail(userEmailBody, model.User.EmailAddress, userAttachment);
             userStream.Close();
 
             var associateSuccess = true;
@@ -350,12 +346,12 @@ namespace ChildMaintenanceCalculator.Controllers
             {
                 vm.RecipientName = string.IsNullOrWhiteSpace(contact.FirstName) ? string.Empty : contact.FirstName;
 
-                var assEmailBody = await viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
+                var assEmailBody = await _viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
 
                 var assStream = new MemoryStream(byteArray);
                 var assAttachment = new Attachment(assStream, "ChildMaintenanceCalculationResult.pdf");
 
-                associateSuccess = emailSenderService.SendEmail(assEmailBody, contact.EmailAddress, assAttachment);
+                associateSuccess = _emailSenderService.SendEmail(assEmailBody, contact.EmailAddress, assAttachment);
                 assStream.Close();
             }
 
@@ -374,7 +370,7 @@ namespace ChildMaintenanceCalculator.Controllers
             {
                 PageSize = Size.A4,
                 FileName = "ChildMaintenanceCalculationResult.pdf",
-                CustomSwitches = pdfFooter
+                CustomSwitches = _pdfFooter
             };
         }
 
