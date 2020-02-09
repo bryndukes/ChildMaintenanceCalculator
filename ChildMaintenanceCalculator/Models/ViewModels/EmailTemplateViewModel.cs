@@ -10,5 +10,6 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
         public Calculation Calculation { get; set; }
         public string RecipientName { get; set; }
         public bool Associate { get; set; }
+        public string UserName { get; set; }
     }
 }

@@ -139,3 +139,40 @@
 </div>
 
 <hr class="pdf-hide"/>
+
+<div class="form-block">
+    <div>
+        <label class="result-section-header">Collect & Pay</label>
+        <div class="hint">
+            <i class="fa fa-info-circle"></i>
+            <span class="hint-text">Collect & Pay is an arrangement made with the Child Maintenance Service whereby they collect the money from the paying parent and pay it to the receiving parent. 
+                There are collection and payment fees for both the paying parent and the receiving parent when using this service. </span>
+        </div>
+    </div>
+
+    <p class="result-paragraph">
+        The below figures show how much the paying parent would have to pay and how much the receiving parent would receive if you were to use the Collect & Pay arrangement.
+    </p>
+    <div class="panel">
+        <table id="total-result-table" style="width: 100%">
+            <colgroup>
+                <col span="1" class="result-column-one">
+                <col span="1" class="result-column-two">
+            </colgroup>
+            <tr>
+                <td>
+                    <span class="result-label">Total paid per week with Collect & Pay</span>
+                    <label class="result-money content-mobile-inline">@Model.CollectAndPayTotalPayable.ToString("C", CultureInfo.CurrentCulture)</label>
+                </td>
+                <td class="content-desktop"><label class="result-money content-desktop">@Model.CollectAndPayTotalPayable.ToString("C", CultureInfo.CurrentCulture)</label></td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="result-label">Total received per week with Collect & Pay</span>
+                    <label class="result-money content-mobile-inline">@Model.CollectAndPayTotalReceivable.ToString("C", CultureInfo.CurrentCulture)</label>
+                </td>
+                <td class="content-desktop"><label class="result-money content-desktop">@Model.CollectAndPayTotalReceivable.ToString("C", CultureInfo.CurrentCulture)</label></td>
+            </tr>
+        </table>
+    </div>
+</div>

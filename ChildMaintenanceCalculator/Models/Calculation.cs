@@ -9,23 +9,20 @@ namespace ChildMaintenanceCalculator.Models
     {
         //TODO: Set up all models to use Dependency Injection?
         //TODO: Encapsulate the properties of this class is possible? or do you not do that with MVC models?
+        private decimal _totalMaintenancePayable;
+
 
         public PayingParent PayingParent = new PayingParent();
-
         public string RateBand { get; set; } //TODO:Should this be a class/Enum?
-
-        private decimal totalMaintenancePayable;
         public decimal TotalMaintenancePayable
         {
-            get { return Math.Round(totalMaintenancePayable, 2); }
+            get { return Math.Round(_totalMaintenancePayable, 2); }
 
-            set{ totalMaintenancePayable = value; }
+            set{ _totalMaintenancePayable = value; }
         }
 
-        //public decimal TotalMaintenancePayable
-        //{
-        //    get { return PayingParent.ReceivingParents.SelectMany(r => r.Children).Sum(c => c.ChildMaintenanceAmount); }
-        //}
+        public decimal CollectAndPayTotalPayable { get; set; }
+        public decimal CollectAndPayTotalReceivable { get; set; }
 
 
         //Calculates the total child maintenance amount payable for each child individually
@@ -243,6 +240,10 @@ namespace ChildMaintenanceCalculator.Models
 
             //RecalculateTotal
             TotalMaintenancePayable = PayingParent.ReceivingParents.SelectMany(p => p.Children).Sum(c => c.ChildMaintenanceAmount);
+
+            //Calculate Collect&Pay figures
+            CollectAndPayTotalPayable = TotalMaintenancePayable + (TotalMaintenancePayable / 100) * 20;
+            CollectAndPayTotalReceivable = TotalMaintenancePayable - (TotalMaintenancePayable / 100) * 4;
 
         }
 

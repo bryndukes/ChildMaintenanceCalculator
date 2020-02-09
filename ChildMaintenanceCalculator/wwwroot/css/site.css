@@ -183,6 +183,12 @@ input[type="number"] {
     font-weight: 600;
     opacity: .6;
     margin-bottom: 10px;
+    width: auto;
+    display: inline-block;
+}
+
+.result-paragraph {
+    max-width: 600px;
 }
 
 .hidden-field {
@@ -467,7 +473,7 @@ input[type="number"] {
     width: 220px;
     background-color: #555;
     color: #fff;
-    font-size: 11px;
+    font-size: 12px;
     text-align: center;
     border-radius: 6px;
     padding: 5px 3px;

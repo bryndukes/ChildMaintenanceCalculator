@@ -301,7 +301,9 @@ namespace ChildMaintenanceCalculator.Controllers
 
             var vm = new EmailTemplateViewModel()
             {
-                Calculation = calculation
+                Calculation = calculation,
+                UserName = model.User.FirstName,
+                Associate = false
             };
             if (!String.IsNullOrWhiteSpace(model.User.FirstName))
             {
@@ -341,6 +343,8 @@ namespace ChildMaintenanceCalculator.Controllers
             userStream.Close();
 
             var associateSuccess = true;
+
+            vm.Associate = true;
 
             foreach (var contact in model.Associates.Where(contact => !String.IsNullOrWhiteSpace(contact.EmailAddress)))
             {

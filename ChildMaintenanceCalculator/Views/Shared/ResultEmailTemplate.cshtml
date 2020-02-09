@@ -14,8 +14,7 @@
     @using System.Globalization
 @using ExtensionMethods
     @model ChildMaintenanceCalculator.Models.ViewModels.EmailTemplateViewModel;
-    <!--TODO: Config the message content-->
-    <div>
+<div>
         <p>
             Hi
             @if (!String.IsNullOrWhiteSpace(Model.RecipientName))
@@ -25,9 +24,25 @@
             ,
             <br />
             <br />
-            Thank you for using the Child Maintenance Calculator.<br />
-            Please find your calculation results below.<br />
         </p>
+        @if (Model.Associate)
+        {
+            <p>
+                This calculation of child maintenance payments has been sent on behalf of @Model.UserName.
+                <br />
+                Please find the calculation results below.
+                <br />
+            </p>
+        }
+        else
+        {
+            <p>
+                Thank you for using the Child Maintenance Calculator.
+                <br />
+                Please find your calculation results below.
+                <br />
+            </p>
+        }
     </div>
 
 
