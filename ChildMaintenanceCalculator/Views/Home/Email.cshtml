@@ -25,12 +25,12 @@
                 <form id="emailResult" enctype="multipart/form-data">
                     <div class="contact-field user">
                         <div>
-                            <label asp-for="User.FirstName"></label>
-                            <input class="fname" asp-for="User.FirstName" />
+                            <label asp-for="@Model.User.FirstName"></label>
+                            <input class="fname" asp-for="@Model.User.FirstName" />
                         </div>
                         <div>
-                            <label asp-for="User.EmailAddress"></label>
-                            <input class="email-address" asp-for="User.EmailAddress" />
+                            <label asp-for="@Model.User.EmailAddress"></label>
+                            <input class="email-address" asp-for="@Model.User.EmailAddress" />
                         </div>
                     </div>
 

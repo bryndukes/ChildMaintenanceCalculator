@@ -8,6 +8,7 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
     {
         public EmailViewModel()
         {
+            User = new Contact();
             Associates = new List<Contact>();
             Associates.Add(new Contact());
         }
