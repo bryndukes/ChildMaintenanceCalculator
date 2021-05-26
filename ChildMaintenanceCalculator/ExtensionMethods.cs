@@ -26,9 +26,14 @@ namespace ExtensionMethods
         //Deserialize string from TempData into a Calculation before returning it to the caller
         public static Calculation GetModel(this Controller instance)
         {
-            string modelString = instance.TempData["model"] as String;
+            Calculation model = null;
 
-            Calculation model = JsonConvert.DeserializeObject<Calculation>(modelString);
+            if (instance.TempData.ContainsKey("model"))
+            {
+                string modelString = instance.TempData["model"] as String;
+
+                model = JsonConvert.DeserializeObject<Calculation>(modelString);
+            }
 
             return model;
         }
@@ -36,9 +41,13 @@ namespace ExtensionMethods
         //Retrieve the model stored in TempData without marking for deletion after request
         public static Calculation PeekModel(this Controller instance)
         {
-            string modelString = instance.TempData.Peek("model") as String;
+            Calculation model = null;
+            if (instance.TempData.ContainsKey("model"))
+            {
+                string modelString = instance.TempData.Peek("model") as String;
 
-            Calculation model = JsonConvert.DeserializeObject<Calculation>(modelString);
+                model = JsonConvert.DeserializeObject<Calculation>(modelString);
+            }
 
             return model;
         }

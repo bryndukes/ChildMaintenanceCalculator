@@ -30,6 +30,12 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
             Id = id;
             FirstName = fName;
         }
+        public Step4Child(int id, string fName, Child.SharedCare sharedCare)
+        {
+            Id = id;
+            FirstName = fName;
+            NightsPayingParentCaresForChildPerYearHigh = sharedCare;
+        }
         public int Id { get; set; }
         public string FirstName { get; set; }
         public Child.SharedCare NightsPayingParentCaresForChildPerYearHigh { get; set; }

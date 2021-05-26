@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <form id="step2" asp-controller="Home" asp-action="Step2" method="post">
+        <form id="step2" asp-controller="Home" asp-action="Step2" asp-route-back="false" method="post">
 
             <div class="form-block">
                 <div class="form-field">
@@ -70,10 +70,11 @@
                     </div>
                 </div>
             </div>
-            
 
-            <button type="submit" class="form-next-button">Next</button>
-
+            <div class="form-buttons-container">
+                <input type="button" class="form-prev-button" value="Previous" onclick="location.href='@Url.Action("Step1", "Home", new { back = true })'" />
+                <button type="submit" class="form-next-button">Next</button>
+            </div>
         </form>
     </div>
 </div>

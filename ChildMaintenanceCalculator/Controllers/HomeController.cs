@@ -42,9 +42,27 @@ namespace ChildMaintenanceCalculator.Controllers
 
         //Step 1 - Add receiving parents and children
         [HttpGet]
-        public IActionResult Step1()
+        public IActionResult Step1(bool back)
         {
             Step1ViewModel viewModel = new Step1ViewModel();
+
+            if (back)
+            {
+                var calculation = this.PeekModel();
+                viewModel.Step1ReceivingParents = calculation.PayingParent.ReceivingParents.Select(r =>
+                    new Step1ReceivingParent()
+                    {
+                        Id = r.Id,
+                        FirstName = r.FirstName,
+                        Step1Children = r.Children.Select(c => new Step1Child()
+                        {
+                            Id = c.Id,
+                            FirstName = c.FirstName,
+                            PreExistingArrangements = c.PreExistingMaintenanceArrangements,
+                            PreExisingArrangementsAmount = c.PreExistingMaintenanceArrangementsAmount
+                        }).ToList()
+                    }).ToList();
+            }      
 
             return View("Step1", viewModel);
 
@@ -104,9 +122,15 @@ namespace ChildMaintenanceCalculator.Controllers
 
         //Step 2 - Does the paying parent receive a relevant benefit
         [HttpGet]
-        public IActionResult Step2()
+        public IActionResult Step2(bool back)
         {
             Step2ViewModel viewModel = new Step2ViewModel();
+
+            if (back)
+            {
+                var calculation = this.PeekModel();
+                viewModel.PayingParentReceivesBenefit = calculation.PayingParent.RelevantBenefit;
+            }
 
             return View("Step2", viewModel);
         }
@@ -118,7 +142,7 @@ namespace ChildMaintenanceCalculator.Controllers
                 return View("Step2", vm);
             
             //Retrieve calculation data from tempData, update with data from step 2 and store in tempData again
-            Calculation calculation = this.GetModel();
+            Calculation calculation = this.PeekModel();
             calculation.PayingParent.RelevantBenefit = vm.PayingParentReceivesBenefit;
             this.StoreModel(calculation);
 
@@ -138,9 +162,17 @@ namespace ChildMaintenanceCalculator.Controllers
 
         // Step 3a - Capture the paying parents income and pension contributions
         [HttpGet]
-        public IActionResult Step3A()
+        public IActionResult Step3A(bool back)
         {
             Step3AViewModel viewModel = new Step3AViewModel();
+
+            if (back)
+            {
+                var calculation = this.PeekModel();
+                viewModel.PayingParentAnnualIncome = calculation.PayingParent.AnnualIncome;
+                viewModel.PayingParentAnnualPension = calculation.PayingParent.AnnualPension;
+            }
+
             return View("Step3A", viewModel);
         }
 
@@ -150,7 +182,7 @@ namespace ChildMaintenanceCalculator.Controllers
             if (!ModelState.IsValid)
                 return View("Step3A", vm);
             
-            Calculation calculation = this.GetModel();
+            Calculation calculation = this.PeekModel();
 
             calculation.PayingParent.AnnualIncome = vm.PayingParentAnnualIncome ?? 0;
             calculation.PayingParent.AnnualPension = vm.PayingParentAnnualPension ?? 0;
@@ -170,14 +202,14 @@ namespace ChildMaintenanceCalculator.Controllers
 
         //Step 3b - How many nights per yer do the children stay with the paying prent (low bracket)
         [HttpGet]
-        public IActionResult Step3B()
+        public IActionResult Step3B(bool back)
         {
             //Get all the children from the domain model into a list of children to pass in to the Step3BViewModel
             List<Step3BChild> children = 
                 this.PeekModel().PayingParent.ReceivingParents
                 .Where(r => r.Children.Any())
                 .SelectMany(r => r.Children)
-                .Select(c => new Step3BChild(c.Id, c.FirstName))
+                .Select(c => new Step3BChild(c.Id, c.FirstName, back ? c.NightsPayingParentCaresForChildPerYearLow : Child.SharedCare.LessThan52))
                 .ToList();
 
             Step3BViewModel viewModel = new Step3BViewModel(children);
@@ -190,7 +222,7 @@ namespace ChildMaintenanceCalculator.Controllers
             if (!ModelState.IsValid)
                 return View("Step3B", vm);
             
-            Calculation calculation = this.GetModel();
+            Calculation calculation = this.PeekModel();
 
             //Set the nights per year lower value for each child, using the child ID as the reference
             foreach(ReceivingParent receivingParent in calculation.PayingParent.ReceivingParents)
@@ -208,13 +240,13 @@ namespace ChildMaintenanceCalculator.Controllers
 
         //Step 4 - How many nights per yer do the children stay with the paying prent (high bracket)
         [HttpGet]
-        public IActionResult Step4()
+        public IActionResult Step4(bool back)
         {
             List<Step4Child> children = 
                 this.PeekModel().PayingParent.ReceivingParents
                     .Where(r => r.Children.Any())
                     .SelectMany(r => r.Children)
-                    .Select(c => new Step4Child(c.Id, c.FirstName)).ToList();
+                    .Select(c => new Step4Child(c.Id, c.FirstName, back ? c.NightsPayingParentCaresForChildPerYearHigh : Child.SharedCare.LessThan52)).ToList();
 
             Step4ViewModel viewModel = new Step4ViewModel(children);
             return View("Step4", viewModel);
@@ -223,7 +255,7 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpPost]
         public IActionResult Step4(Step4ViewModel vm)
         {
-            Calculation calculation = this.GetModel();
+            Calculation calculation = this.PeekModel();
 
             foreach (ReceivingParent receivingParent in calculation.PayingParent.ReceivingParents)
             {
@@ -241,16 +273,23 @@ namespace ChildMaintenanceCalculator.Controllers
 
         //Step 5 - How many other children does the paying parent support
         [HttpGet]
-        public IActionResult Step5()
+        public IActionResult Step5(bool back)
         {
-            Step5ViewModel model = new Step5ViewModel();
-            return View("Step5", model);
+            Step5ViewModel viewModel = new Step5ViewModel();
+
+            if (back)
+            {
+                var calculation = this.PeekModel();
+                viewModel.OtherSupportedChildren = calculation.PayingParent.OtherSupportedChildren;
+            }
+
+            return View("Step5", viewModel);
         }
 
         [HttpPost]
         public IActionResult Step5(Step5ViewModel vm)
         {
-            var calculation = this.GetModel();
+            var calculation = this.PeekModel();
             calculation.PayingParent.OtherSupportedChildren = vm.OtherSupportedChildren;
             this.StoreModel(calculation);
 
@@ -260,7 +299,7 @@ namespace ChildMaintenanceCalculator.Controllers
         [HttpGet]
         public IActionResult Result()
         {
-            var calculation = this.GetModel();
+            var calculation = this.PeekModel();
             calculation.Calculate();
             this.StoreModel(calculation);
 

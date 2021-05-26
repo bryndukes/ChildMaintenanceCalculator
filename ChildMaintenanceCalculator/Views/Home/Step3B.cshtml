@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <form id="step3B" asp-controller="Home" asp-action="Step3B" method="post">
+        <form id="step3B" asp-controller="Home" asp-action="Step3B" asp-route-back="false" method="post">
                 
             <div class="form-block">
                 <label>How many nights per year does each child stay with the paying parent?</label>
@@ -56,7 +56,10 @@
                 }
             </div>
 
-            <button type="submit" class="form-next-button">Next</button>
+            <div class="form-buttons-container">
+                <input type="button" class="form-prev-button" value="Previous" onclick="location.href='@Url.Action("Step2", "Home", new { back = true })'" />
+                <button type="submit" class="form-next-button">Next</button>
+            </div>
 
         </form>
     </div>

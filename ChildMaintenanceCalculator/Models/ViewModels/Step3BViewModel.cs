@@ -24,11 +24,11 @@ namespace ChildMaintenanceCalculator.Models.ViewModels
         public Step3BChild()
         {
         }
-        public Step3BChild(int id, string fName)
+        public Step3BChild(int id, string fName, Child.SharedCare sharedCare = Child.SharedCare.LessThan52)
         {
             Id = id;
             FirstName = fName;
-            NightsPayingParentCaresForChildPerYearLow = Child.SharedCare.LessThan52;
+            NightsPayingParentCaresForChildPerYearLow = sharedCare;
         }
         public int Id { get; set; }
         public string FirstName { get; set; }

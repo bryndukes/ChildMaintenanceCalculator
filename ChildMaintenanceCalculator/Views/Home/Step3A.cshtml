@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <form id="step3A" asp-controller="Home" asp-action="Step3A" method="post">
+        <form id="step3A" asp-controller="Home" asp-action="Step3A" asp-route-back="false" method="post">
 
             <div class="form-block">
                 <label class="form-label">Paying parent's gross annual income</label>
@@ -44,7 +44,10 @@
                 </div>
             </div>
 
-            <button type="submit" class="form-next-button">Next</button>
+            <div class="form-buttons-container">
+                <input type="button" class="form-prev-button" value="Previous" onclick="location.href='@Url.Action("Step2", "Home", new { back = true })'" />
+                <button type="submit" class="form-next-button">Next</button>
+            </div>
 
         </form>
     </div>

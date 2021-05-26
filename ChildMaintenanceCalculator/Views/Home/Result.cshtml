@@ -20,11 +20,13 @@
                 </h3>
             </div>
         </div>
-        
+
         <div>
             <div class="tab-container">
                 <ul class="tabs">
-                    <li id="resultItem" class="tabs-item active"><a onclick="openTab('result')">Result</a></li><li id="answersItem" class="tabs-item"><a onclick="openTab('answers')">Answers</a></li>@*<li id="explanationItem" class="tabs-item"><a onclick="openTab('explanation')">Explanation</a></li>*@
+                    <li id="resultItem" class="tabs-item active"><a onclick="openTab('result')">Result</a></li>
+                    <li id="answersItem" class="tabs-item"><a onclick="openTab('answers')">Answers</a></li>
+                    @*<li id="explanationItem" class="tabs-item"><a onclick="openTab('explanation')">Explanation</a></li>*@
                 </ul>
             </div>
             <div class="tab-right">
@@ -35,7 +37,7 @@
             @Html.PartialFor(model => model, "_ResultPartial")
         </div>
         <div id="answersTab" class="tab closed">
-            @Html.PartialFor(model => model,"_AnswersPartial")
+            @Html.PartialFor(model => model, "_AnswersPartial")
         </div>
         @*<div id="explanationTab" class="tab closed">
             @Html.Partial("_ExplanationPartial")
@@ -57,10 +59,13 @@
             </button>
         </div>
 
-        <input type="button"
-               value="Start a New Calculation"
-               onclick="location.href='@Url.Action("Step1", "Home")'"
-               class="form-next-button" />
+        <div class="form-buttons-container">
+            <input type="button"
+                   value="Start a New Calculation"
+                   onclick="location.href='@Url.Action("Step1", "Home")'"
+                   class="form-next-button" />
+        </div>
+
 
     </div>
 </div>
