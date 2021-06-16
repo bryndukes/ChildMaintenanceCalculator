@@ -303,6 +303,10 @@ namespace ChildMaintenanceCalculator.Controllers
             calculation.Calculate();
             this.StoreModel(calculation);
 
+            var anonymisedModel = this.AnonymiseModel();
+            var dump = ObjectDumper.Dump(anonymisedModel);
+            _logger.LogInformation(dump);
+
             return View("Result", calculation);
         }
 

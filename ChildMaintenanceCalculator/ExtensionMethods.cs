@@ -51,6 +51,23 @@ namespace ExtensionMethods
 
             return model;
         }
+
+        public static Calculation AnonymiseModel(this Controller instance)
+        {
+            var model = instance.PeekModel();
+
+            foreach(var parent in model.PayingParent.ReceivingParents)
+            {
+                parent.FirstName = "_";
+
+                foreach(var child in parent.Children)
+                {
+                    child.FirstName = "_";
+                }
+            }
+
+            return model;
+        }
     }
 
     public static class HtmlHelperExtensionMethods
