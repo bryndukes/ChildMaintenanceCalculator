@@ -1,20 +1,22 @@
 #docker-compose.yml
 
-version: '2'
- 
+version: "3"
+
 services:
-  app:
-    build:
-      context:  ./
-      dockerfile: Dockerfile
-  https-portal:
-    image: steveltn/https-portal:1
+  reverse-proxy:
+    container_name: reverse-proxy
+    image: nginx
+    depends_on: -child-maintenance-calculator
     ports:
-      - '80:80'
-      - '443:443'
-    links:
-      - app
-    restart: always
-    environment:
-      DOMAINS: 'childmaintenancecalculator.co.uk -> http://app:5000'
-      STAGE: 'production'
+      - 80:80
+    volumes:
+      - ./ReverseProxy/nginx.conf:/etc/nginx/nginx.conf
+
+  child-maintenance-calculator:
+    container_name: child-maintenance-calculator
+    image: bryndukes/child-maintenance-calculator:latest
+    build:
+      context: .
+    ports:
+      - 8080:80
+    restart: on-failure
