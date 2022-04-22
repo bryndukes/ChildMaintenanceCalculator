@@ -3,20 +3,26 @@
 version: "3"
 
 services:
-  reverse-proxy:
-    container_name: reverse-proxy
-    image: nginx
-    depends_on: -child-maintenance-calculator
+  proxy:
+    container_name: "nginxcore"
+    image: nginx-core # Our custom NGINX Docker image
+    build:
+      context: ./ReverseProxy/
     ports:
-      - 80:80
-    volumes:
-      - ./ReverseProxy/nginx.conf:/etc/nginx/nginx.conf
-
+      - "8083:80" # Expose the port 80 from the service to the host at 8081  
+    networks:
+      - mynetwork
+  
   child-maintenance-calculator:
     container_name: child-maintenance-calculator
     image: bryndukes/child-maintenance-calculator:latest
     build:
       context: .
-    ports:
-      - 8080:80
     restart: on-failure
+    
+    networks:
+      - mynetwork
+  
+networks:
+  mynetwork: # User-Defined Network with the name mynetwork  
+    driver: bridge
