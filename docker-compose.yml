@@ -9,7 +9,7 @@ services:
     build:
       context: ./ReverseProxy/
     ports:
-      - "8083:80" # Expose the port 80 from the service to the host at 8081  
+      - "8080:80"
     networks:
       - mynetwork
   
