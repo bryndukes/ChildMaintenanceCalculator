@@ -12,19 +12,21 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using ChildMaintenanceCalculator.Controllers;
+using Microsoft.Extensions.Logging;
 
 namespace ExtensionMethods
 {
     public static class ControllerExtensionMethods
     {
         //Model object must be serialized into a json string before being stored in TempData
-        public static void StoreModel(this Controller instance, Calculation model)
+        public static void StoreModel(this HomeController instance, Calculation model)
         {
             instance.TempData["model"] = JsonConvert.SerializeObject(model);
         }
 
         //Deserialize string from TempData into a Calculation before returning it to the caller
-        public static Calculation GetModel(this Controller instance)
+        public static Calculation GetModel(this HomeController instance)
         {
             Calculation model = null;
 
@@ -34,12 +36,18 @@ namespace ExtensionMethods
 
                 model = JsonConvert.DeserializeObject<Calculation>(modelString);
             }
+            else
+            {
+                Console.WriteLine("Calculation model not found in Temp Data");
+                instance.Logger.LogError("Calculation model not found in Temp Data");
+            }
 
             return model;
+            
         }
 
         //Retrieve the model stored in TempData without marking for deletion after request
-        public static Calculation PeekModel(this Controller instance)
+        public static Calculation PeekModel(this HomeController instance)
         {
             Calculation model = null;
             if (instance.TempData.ContainsKey("model"))
@@ -48,11 +56,16 @@ namespace ExtensionMethods
 
                 model = JsonConvert.DeserializeObject<Calculation>(modelString);
             }
+            else
+            {
+                Console.WriteLine("Calculation model not found in Temp Data");
+                instance.Logger.LogError("Calculation model not found in Temp Data");
+            }
 
             return model;
         }
 
-        public static Calculation AnonymiseModel(this Controller instance)
+        public static Calculation AnonymiseModel(this HomeController instance)
         {
             var model = instance.PeekModel();
 

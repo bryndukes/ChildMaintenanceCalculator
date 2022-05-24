@@ -16,8 +16,6 @@ namespace ChildMaintenanceCalculator
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
-
-            Console.WriteLine("APP STARTED!");
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

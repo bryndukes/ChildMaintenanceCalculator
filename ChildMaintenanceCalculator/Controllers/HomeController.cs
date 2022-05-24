@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
 
@@ -23,14 +24,14 @@ namespace ChildMaintenanceCalculator.Controllers
     {
         private readonly IViewRenderService _viewRenderService;
         private readonly IEmailSenderService _emailSenderService;
-        private readonly ILogger _logger;
+        public readonly ILogger Logger;
         private string _pdfFooter;
 
-        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService, ILogger<HomeController> logger)
+        public HomeController(IViewRenderService viewRenderService, IEmailSenderService emailSenderService, ILogger<HomeController> Logger)
         {
             this._viewRenderService = viewRenderService;
             this._emailSenderService = emailSenderService;
-            this._logger = logger;
+            this.Logger = Logger;
 
             this._pdfFooter = " --footer-center \"" + DateTime.Now.Date.ToString("MM/dd/yyyy") + "  Page: [page]/[toPage]\"" + " --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\"";
         }
@@ -141,8 +142,13 @@ namespace ChildMaintenanceCalculator.Controllers
             if (!ModelState.IsValid)
                 return View("Step2", vm);
             
+            Logger.LogInformation(vm.PayingParentReceivesBenefit.ToString());
+
             //Retrieve calculation data from tempData, update with data from step 2 and store in tempData again
             Calculation calculation = this.PeekModel();
+            var json = JsonConvert.SerializeObject(calculation);
+            Logger.LogInformation(json);
+            
             calculation.PayingParent.RelevantBenefit = vm.PayingParentReceivesBenefit;
             this.StoreModel(calculation);
 
@@ -305,7 +311,7 @@ namespace ChildMaintenanceCalculator.Controllers
 
             var anonymisedModel = this.AnonymiseModel();
             var dump = ObjectDumper.Dump(anonymisedModel);
-            _logger.LogInformation(dump);
+            Logger.LogInformation(dump);
 
             return View("Result", calculation);
         }
@@ -352,7 +358,7 @@ namespace ChildMaintenanceCalculator.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError($"Unable to render PDF: {nameof(e)}: {e.Message}.");
+                Logger.LogError($"Unable to render PDF: {nameof(e)}: {e.Message}.");
             }
 
             var userEmailBody = await _viewRenderService.RenderToStringAsync("ResultEmailTemplate", contextAccessor, vm);
@@ -413,7 +419,7 @@ namespace ChildMaintenanceCalculator.Controllers
 
                 Exception exception = exceptionFeature.Error;
 
-                _logger.LogError($"{nameof(exception)}: {exception.Message}.");
+                Logger.LogError($"{nameof(exception)}: {exception.Message}.");
             }
 
             return View();

@@ -32,7 +32,7 @@ namespace ChildMaintenanceCalculator
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -60,6 +60,11 @@ namespace ChildMaintenanceCalculator
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' ajax.aspnetcdn.com cdnjs.cloudflare.com; frame-ancestors novalaw.co.uk familylawpartners.co.uk;");
+                await next();
+            });
 
             app.UseMvc(routes =>
             {

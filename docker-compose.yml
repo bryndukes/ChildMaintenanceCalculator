@@ -8,22 +8,30 @@ services:
       - child-maintenance-calculator
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - mynetwork
+      
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot 
   
   child-maintenance-calculator:
     container_name: child-maintenance-calculator
     image: bryndukes/child-maintenance-calculator:latest
-    ports:
-      - "5000:5000"
     networks:
       - mynetwork
     build:
       context: .
     restart: on-failure
 
-  networks:
-    mynetwork:
-      driver: bridge
+networks:
+  mynetwork:
+    driver: bridge
