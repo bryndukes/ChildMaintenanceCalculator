@@ -62,7 +62,7 @@ namespace ChildMaintenanceCalculator
             app.UseCookiePolicy();
             app.Use(async (context, next) =>
             {
-                context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' ajax.aspnetcdn.com cdnjs.cloudflare.com; frame-ancestors novalaw.co.uk familylawpartners.co.uk;");
+                context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' ajax.aspnetcdn.com cdnjs.cloudflare.com novalaw.co.uk familylawpartners.co.uk; frame-ancestors novalaw.co.uk familylawpartners.co.uk;");
                 await next();
             });
 
